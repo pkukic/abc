@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=KonqPopupMenu/Plugin
+MimeType=application/vnd.openxmlformats-officedocument.wordprocessingml.document;application/msword;application/vnd.oasis.opendocument.text;application/rtf;text/plain;
+Actions=convertToPDF;
+X-KDE-Priority=TopLevel
+
+[Desktop Action convertToPDF]
+Name=Convert to PDF
+Icon=application-pdf
+Exec=libreoffice --headless --convert-to pdf --outdir "$(dirname %f)" %F

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=KonqPopupMenu/Plugin
+MimeType=audio/mpeg;audio/mp3;video/webm;audio/webm;audio/wav;audio/x-wav;audio/ogg;video/mp4;audio/flac;
+Actions=transcribeAudio;
+X-KDE-Priority=TopLevel
+
+[Desktop Action transcribeAudio]
+Name=Transcribe
+Icon=audio-x-generic
+Exec=gnome-terminal -- "$HOME/.local/bin/transcribe-audio.sh" %F

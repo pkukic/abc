@@ -1,0 +1,21 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=KonqPopupMenu/Plugin
+MimeType=inode/directory;
+Actions=markRed;markGreen;clearColor;
+X-KDE-Priority=TopLevel
+
+[Desktop Action markRed]
+Name=Mark as Red
+Icon=folder-red
+Exec=$HOME/.local/bin/set-folder-color.sh red %F
+
+[Desktop Action markGreen]
+Name=Mark as Green
+Icon=folder-green
+Exec=$HOME/.local/bin/set-folder-color.sh green %F
+
+[Desktop Action clearColor]
+Name=Clear Color
+Icon=folder
+Exec=$HOME/.local/bin/set-folder-color.sh clear %F

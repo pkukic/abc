@@ -1,0 +1,12 @@
+[Desktop Entry]
+
+Type=Service
+ServiceTypes=KonqPopupMenu/Plugin
+MimeType=application/epub+zip;application/x-mobipocket-ebook;
+Actions=convertEbookToPDF;
+X-KDE-Priority=TopLevel
+
+[Desktop Action convertEbookToPDF]
+Name=Convert to PDF
+Icon=application-pdf
+Exec=$HOME/.local/bin/ebook-to-pdf.sh %F
