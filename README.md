@@ -23,15 +23,9 @@ When using Gemini to create Anki flashcards from study materials:
 |--------------------|---------------|--------|-----------|
 | **Convert to PDF** | `.docx`, `.doc`, `.odt`, `.rtf`, `.txt` | PDF | LibreOffice |
 | **Convert to PDF** | `.epub`, `.mobi` | PDF | Calibre |
-| **Transcribe** | `.mp3`, `.webm`, `.wav`, `.ogg`, `.mp4`, `.flac` | Text + JSON | insanely-fast-whisper |
+| **Transcribe** | `.mp3`, `.webm`, `.wav`, `.ogg`, `.mp4`, `.flac` | Text with timestamps | faster-whisper |
+| **Transcribe + Fix** | `.mp3`, `.webm`, `.wav`, `.ogg`, `.mp4`, `.flac` | Text with AI correction | faster-whisper + Gemini |
 | **Mark as Red/Green** | Folders | Colored folder icon | Built-in |
-
-## Prerequisites
-
-- **Linux** with KDE Plasma (tested on Pop!_OS with Dolphin)
-- **LibreOffice** (for document conversion)
-- **Calibre** (for ebook conversion): `sudo apt install calibre`
-- **insanely-fast-whisper** (for transcription): `pipx install insanely-fast-whisper`
 
 ## Installation
 
@@ -41,10 +35,24 @@ cd abc
 ./install_all.sh
 ```
 
-The installer will:
-- Check for required dependencies
-- Install right-click context menu entries
-- Set up helper scripts in `~/.local/bin/`
+The installer will automatically:
+- Install required dependencies (LibreOffice, Calibre, uv)
+- Create a Python virtual environment at `~/.local/share/abc/venv`
+- Install Python packages (faster-whisper, google-generativeai)
+- Set up right-click context menu entries
+
+> **Note**: You may be prompted for your password to install system packages.
+
+### Gemini API Key (for Transcribe + Fix)
+
+To use the "Transcribe + Fix" feature, add your Gemini API key:
+
+```bash
+mkdir -p ~/.config/abc
+echo "GEMINI_API_KEY=your_key_here" > ~/.config/abc/.env
+```
+
+Get your API key at: https://aistudio.google.com/apikey
 
 ## Usage
 
@@ -52,11 +60,22 @@ The installer will:
 2. Select the appropriate action (e.g., "Convert to PDF", "Transcribe")
 3. The output file will be created next to the original
 
-### Transcription Output
+### Transcription
 
-Transcription creates two files:
-- `filename_transcript.json` — Full transcript with timestamps
-- `filename_transcript.txt` — Plain text for easy copy/paste into Gemini
+Transcription uses [faster-whisper](https://github.com/SYSTRAN/faster-whisper) with the `distil-large-v3` model.
+
+**Options:**
+- **Transcribe** — Fast transcription with timestamps
+- **Transcribe + Fix** — Same as above, but uses Gemini API to fix errors like misheard technical terms (SISC→CISC, TinyGuard→TinyGrad)
+
+Output format:
+```
+[0.00s -> 5.23s] What possible ideas do you have for how human species ends?
+[5.23s -> 12.45s] Sure. So I think the most obvious way to me is wireheading.
+...
+```
+
+Output: `filename_transcript.txt` — Text with timestamps for easy reference
 
 ## Related
 

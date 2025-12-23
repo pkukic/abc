@@ -2,10 +2,15 @@
 Type=Service
 ServiceTypes=KonqPopupMenu/Plugin
 MimeType=audio/mpeg;audio/mp3;video/webm;audio/webm;audio/wav;audio/x-wav;audio/ogg;video/mp4;audio/flac;
-Actions=transcribeAudio;
+Actions=transcribeAudio;transcribeAudioFix;
 X-KDE-Priority=TopLevel
 
 [Desktop Action transcribeAudio]
 Name=Transcribe
 Icon=audio-x-generic
-Exec=gnome-terminal -- "$HOME/.local/bin/transcribe-audio.sh" %F
+Exec=gnome-terminal -- bash -c '$HOME/.local/bin/transcribe-audio.sh "$@"; echo; read -p "Press Enter to close..."' _ %F
+
+[Desktop Action transcribeAudioFix]
+Name=Transcribe + Fix (LLM)
+Icon=audio-x-generic
+Exec=gnome-terminal -- bash -c '$HOME/.local/bin/transcribe-audio-fix.sh "$@"; echo; read -p "Press Enter to close..."' _ %F

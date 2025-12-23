@@ -1,6 +1,6 @@
 #!/bin/bash
-# Transcribes audio/video files using faster-whisper
-# Usage: transcribe-audio.sh file1.mp3 [file2.webm ...]
+# Transcribes audio/video files using faster-whisper with LLM correction
+# Usage: transcribe-audio-fix.sh file1.mp3 [file2.webm ...]
 # Output: Creates a .txt file next to each input file
 
 SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
@@ -10,7 +10,7 @@ for file in "$@"; do
     if [[ -f "$file" ]]; then
         txt_output="${file%.*}_transcript.txt"
         
-        "$VENV_PYTHON" "$SCRIPT_DIR/transcribe.py" "$file" --output "$txt_output"
+        "$VENV_PYTHON" "$SCRIPT_DIR/transcribe.py" "$file" --fix --output "$txt_output"
         
         if [[ -f "$txt_output" ]]; then
             echo "✓ Saved transcript to: $txt_output"
@@ -22,5 +22,5 @@ done
 
 # Show notification when done
 if command -v notify-send &> /dev/null; then
-    notify-send "Transcription Complete" "Finished transcribing $# file(s)"
+    notify-send "Transcription Complete" "Finished transcribing $# file(s) with LLM correction"
 fi

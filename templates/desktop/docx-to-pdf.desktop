@@ -8,4 +8,4 @@ X-KDE-Priority=TopLevel
 [Desktop Action convertToPDF]
 Name=Convert to PDF
 Icon=application-pdf
-Exec=libreoffice --headless --convert-to pdf --outdir "$(dirname %f)" %F
+Exec=bash -c 'for f in "$@"; do libreoffice --headless --convert-to pdf --outdir "$(dirname "$f")" "$f"; done' _ %F
