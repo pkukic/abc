@@ -2,7 +2,7 @@
 Type=Service
 ServiceTypes=KonqPopupMenu/Plugin
 MimeType=audio/mpeg;audio/mp3;video/webm;audio/webm;audio/wav;audio/x-wav;audio/ogg;video/mp4;audio/flac;
-Actions=transcribeMonologue;transcribeDialogue;
+Actions=transcribeMonologue;transcribeDialogue;transcribeBatch;
 X-KDE-Priority=TopLevel
 
 [Desktop Action transcribeMonologue]
@@ -14,3 +14,8 @@ Exec=gnome-terminal -- bash -c '$HOME/.local/bin/transcribe-monologue.sh "$@"; e
 Name=Transcribe (Dialogue)
 Icon=audio-x-generic
 Exec=gnome-terminal -- bash -c '$HOME/.local/bin/transcribe-dialogue.sh "$@"; echo; read -p "Press Enter to close..."' _ %F
+
+[Desktop Action transcribeBatch]
+Name=Transcribe (Choose per file)
+Icon=document-multiple
+Exec=gnome-terminal -- bash -c '$HOME/.local/bin/transcribe-batch.sh "$@"' _ %F
