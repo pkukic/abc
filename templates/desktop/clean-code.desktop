@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=KonqPopupMenu/Plugin
+MimeType=text/x-python;text/x-script.python;application/x-python;text/javascript;application/javascript;text/x-java;text/x-c;text/x-c++;text/x-rustsrc;text/x-go;text/x-ruby;application/x-shellscript;text/plain;
+Actions=cleanCode;
+X-KDE-Priority=TopLevel
+
+[Desktop Action cleanCode]
+Name=Clean & Comment (LLM)
+Icon=accessories-text-editor
+Exec=gnome-terminal -- bash -c '$HOME/.local/bin/clean-code.sh "$@"; echo; read -p "Press Enter to close..."' _ %F

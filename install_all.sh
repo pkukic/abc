@@ -90,6 +90,7 @@ source "$SCRIPT_DIR/converters/docx_to_pdf.sh"
 source "$SCRIPT_DIR/converters/epub_to_pdf.sh"
 source "$SCRIPT_DIR/converters/transcribe_audio.sh"
 source "$SCRIPT_DIR/converters/folder_colors.sh"
+source "$SCRIPT_DIR/converters/clean_code.sh"
 
 echo ""
 
