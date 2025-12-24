@@ -49,7 +49,7 @@ def get_config() -> dict:
     
     # Default Gemini model
     if not config["gemini_model"]:
-        config["gemini_model"] = "gemini-2.0-flash"
+        config["gemini_model"] = "gemini-3-flash-preview"
         
     
     return config
