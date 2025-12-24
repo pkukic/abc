@@ -1,89 +1,99 @@
-# ABC - Auto Build Cards
+# ABC - AI-powered Batch Converters
 
-<p align="center">
-  <img src="assets/logo.png" alt="ABC Logo" width="128">
-</p>
+A collection of right-click context menu utilities for file conversion and AI-powered processing on Linux (KDE).
 
-**ABC** is a collection of scripts that add right-click context menu options for converting files into formats optimized for [Gemini](https://gemini.google.com/app). The goal: prepare documents, ebooks, and audio/video for AI-assisted Anki flashcard generation.
+## Features
 
-The name stands for **A**uto **B**uild **C**ards. It's also a pun—[ABC sir](https://www.abcsir.hr/) is a popular brand of spreadable cheese in Croatia. 
-
-> 🚧 **Work in Progress** - More converters coming soon!
-
-## Why?
-
-When using Gemini to create Anki flashcards from study materials:
-
-1. **Format compatibility**: Some formats aren't directly accepted by Gemini (like `.docx`, `.epub`, `.mobi`)—these get converted to **PDF**
-2. **Token efficiency**: Audio/video files are expensive in tokens—transcribing them to **text** is much cheaper and often more useful
-
-## Current Features
-
-| Right-click Option | Input Formats | Output | Tool Used |
-|--------------------|---------------|--------|-----------|
-| **Convert to PDF** | `.docx`, `.doc`, `.odt`, `.rtf`, `.txt` | PDF | LibreOffice |
-| **Convert to PDF** | `.epub`, `.mobi` | PDF | Calibre |
-| **Transcribe** | `.mp3`, `.webm`, `.wav`, `.ogg`, `.mp4`, `.flac` | Text with speaker names | insanely-fast-whisper + pyannote + Gemini |
-| **Mark as Red/Green** | Folders | Colored folder icon | Built-in |
+| Feature | Description |
+|---------|-------------|
+| **Document → PDF** | Convert DOCX/ODT/RTF to PDF via LibreOffice |
+| **Ebook → PDF** | Convert EPUB/MOBI to PDF via Calibre |
+| **Transcribe (Monologue)** | Audio/video transcription for 1 speaker |
+| **Transcribe (Dialogue)** | Audio/video transcription for 2 speakers with diarization |
+| **Transcribe (Batch)** | Select multiple files, choose type per file |
+| **Clean & Comment Code** | Use Gemini to add educational comments to code |
+| **Notes to LaTeX PDF** | Convert handwritten PDF notes to typeset LaTeX PDF |
+| **Folder Colors** | Set folder colors in Dolphin |
 
 ## Installation
 
 ```bash
-git clone git@github.com:pkukic/abc.git
+git clone https://github.com/pkukic/abc.git
 cd abc
+cp .env.example .env
+# Edit .env with your API keys
 ./install_all.sh
 ```
 
-The installer will automatically:
-- Install required dependencies (LibreOffice, Calibre, uv)
-- Create a Python virtual environment at `~/.local/share/abc/venv`
-- Install Python packages (insanely-fast-whisper, google-genai)
-- Set up right-click context menu entries
+## Configuration
 
-> **Note**: You may be prompted for your password to install system packages.
-
-### API Keys
-
-Create a config file at `~/.config/abc/.env`:
+Create a `.env` file in the project root (copy from `.env.example`):
 
 ```bash
-mkdir -p ~/.config/abc
-cat > ~/.config/abc/.env << EOF
-# For speaker identification and error correction
-GEMINI_API_KEY=your_gemini_key_here
+# Google Gemini API Key (required for LLM features)
+GEMINI_API_KEY=your-gemini-api-key-here
 
-# For speaker diarization
-HF_TOKEN=your_huggingface_token_here
-EOF
+# Models (optional, defaults shown)
+GEMINI_MODEL=gemini-3-flash-preview
+GEMINI_MODEL_PRO=gemini-3-pro-preview
+
+# HuggingFace Token (required for speaker diarization)
+HF_TOKEN=your-huggingface-token-here
 ```
 
-**Get your keys:**
-- Gemini API key: https://aistudio.google.com/apikey
-- HuggingFace token: https://huggingface.co/settings/tokens
-  - You must also accept the model license at: https://huggingface.co/pyannote/speaker-diarization
+Get your API keys:
+- **Gemini**: https://aistudio.google.com/apikey
+- **HuggingFace**: https://huggingface.co/settings/tokens
+  - Also accept model terms at: https://huggingface.co/pyannote/speaker-diarization-3.1
+
+## Project Structure
+
+```
+abc/
+├── install_all.sh          # Main installer
+├── .env.example            # API key template
+├── converters/             # Installer scripts for each feature
+│   ├── shared_libs.sh      # Installs shared libraries
+│   ├── docx_to_pdf.sh
+│   ├── epub_to_pdf.sh
+│   ├── transcribe_audio.sh
+│   ├── clean_code.sh
+│   ├── notes_to_pdf.sh
+│   └── folder_colors.sh
+├── templates/
+│   ├── desktop/            # KDE service menu files
+│   ├── prompts/            # External LLM prompt templates
+│   │   ├── clean_code.txt
+│   │   ├── notes_to_latex.txt
+│   │   └── transcribe_fix.txt
+│   └── scripts/            # Python and shell scripts
+│       ├── lib/            # Shared libraries
+│       │   ├── common.py   # Python utilities (config, Gemini)
+│       │   └── common.sh   # Shell utilities (batch, notify)
+│       ├── transcribe.py
+│       ├── clean_code.py
+│       ├── notes_to_pdf.py
+│       └── *.sh            # Shell wrappers
+└── README.md
+```
+
+## Dependencies
+
+Automatically installed/checked:
+- **LibreOffice** - Document conversion
+- **Calibre** - Ebook conversion
+- **Poppler utils** - PDF to image conversion
+- **TeX Live** - LaTeX compilation
+- **uv** - Python package manager
+- **insanely-fast-whisper** - Transcription with diarization
+- **google-genai** - Gemini API client
+
+Optional for GPU acceleration:
+- **cuDNN 9** - CUDA deep neural network library
 
 ## Usage
 
-1. Right-click any supported file in your file manager
-2. Select the appropriate action (e.g., "Convert to PDF", "Transcribe")
-3. The output file will be created next to the original
-
-### Transcription
-
-Transcription uses [insanely-fast-whisper](https://github.com/Vaibhavs10/insanely-fast-whisper) with [pyannote.audio](https://github.com/pyannote/pyannote-audio) for speaker diarization, then [Gemini](https://gemini.google.com) to identify speakers from the filename and fix transcription errors.
-
-Example output (from filename `George_Hotz_Lex_Fridman.mp3`):
-```
-[Lex Fridman][0.00s -> 5.23s] What possible ideas do you have for how human species ends?
-[George Hotz][5.23s -> 12.45s] Sure. So I think the most obvious way to me is wireheading.
-...
-```
-
-Output: `filename_transcript.txt` — Text with timestamps for easy reference
-
-## Related
-
-- [Margo](https://github.com/pkukic/margo) — PDF reader for annotating and discussing papers with Gemini
+After installation, right-click files in Dolphin to see context menu options.
 
 ## License
 

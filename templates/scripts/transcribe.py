@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
-"""Transcribe audio/video files with speaker diarization and LLM correction.
+"""Transcribe audio/video with speaker diarization and LLM correction.
 
-Uses insanely-fast-whisper with pyannote.audio for speaker diarization,
-then Gemini to identify speakers from the filename and fix transcription errors.
-
-Output format: [Speaker Name][0.00s -> 5.23s] Text content here
+Uses insanely-fast-whisper for transcription and diarization,
+then Gemini for speaker identification and error correction.
 """
 
 import argparse
@@ -15,44 +13,9 @@ import sys
 import tempfile
 from pathlib import Path
 
-# Config file location - same dir as script (copied during install)
-SCRIPT_DIR = Path(__file__).parent
-ENV_FILE = SCRIPT_DIR / ".env"
-
-
-def get_config() -> dict:
-    """Get configuration from environment or config file."""
-    config = {
-        "gemini_api_key": os.environ.get("GEMINI_API_KEY"),
-        "gemini_model": os.environ.get("GEMINI_MODEL"),
-        "hf_token": os.environ.get("HF_TOKEN"),
-    }
-    
-    # Check config file
-    if ENV_FILE.exists():
-        file_config = ENV_FILE.read_text()
-        for line in file_config.splitlines():
-            line = line.strip()
-            if not line or line.startswith("#"):
-                continue
-            if "=" in line:
-                key, value = line.split("=", 1)
-                key = key.strip().lower()
-                value = value.strip().strip('"').strip("'")
-                
-                if key == "gemini_api_key" and not config["gemini_api_key"]:
-                    config["gemini_api_key"] = value
-                elif key == "gemini_model" and not config["gemini_model"]:
-                    config["gemini_model"] = value
-                elif key == "hf_token" and not config["hf_token"]:
-                    config["hf_token"] = value
-    
-    # Default Gemini model
-    if not config["gemini_model"]:
-        config["gemini_model"] = "gemini-3-flash-preview"
-        
-    
-    return config
+# Add lib to path
+sys.path.insert(0, str(Path(__file__).parent / "lib"))
+from common import get_config, call_gemini, load_prompt
 
 
 def transcribe_with_diarization(
@@ -62,26 +25,21 @@ def transcribe_with_diarization(
     hf_token: str = None,
     num_speakers: int = 2,
 ) -> str:
-    """Transcribe audio file with speaker diarization using insanely-fast-whisper.
+    """Transcribe audio file with speaker diarization using insanely-fast-whisper."""
     
-    Returns transcript in format: [Speaker N][start -> end] text
-    """
-    # Create temp file for output
     with tempfile.NamedTemporaryFile(suffix=".json", delete=False) as tmp:
         output_path = tmp.name
     
     try:
-        # Build command
         cmd = [
             "insanely-fast-whisper",
             "--file-name", file_path,
             "--model-name", model_name,
             "--batch-size", str(batch_size),
             "--transcript-path", output_path,
-            "--timestamp", "chunk",  # chunk works for all models (word requires alignment_heads)
+            "--timestamp", "chunk",
         ]
         
-        # Add diarization if HF token is provided
         if hf_token:
             cmd.extend([
                 "--hf-token", hf_token,
@@ -90,11 +48,9 @@ def transcribe_with_diarization(
             print(f"Speaker diarization: enabled ({num_speakers} speaker{'s' if num_speakers > 1 else ''})", file=sys.stderr)
         else:
             print("⚠ No HF_TOKEN provided - diarization disabled", file=sys.stderr)
-            print("  Add HF_TOKEN=your_token to ~/.config/abc/.env", file=sys.stderr)
         
         print(f"Transcribing with {model_name}...", file=sys.stderr)
         
-        # Run insanely-fast-whisper
         result = subprocess.run(cmd, capture_output=True, text=True)
         
         if result.returncode != 0:
@@ -102,116 +58,73 @@ def transcribe_with_diarization(
             print(result.stderr, file=sys.stderr)
             sys.exit(1)
         
-        # Parse output JSON
         with open(output_path) as f:
             data = json.load(f)
         
-        # Format output
-        lines = []
-        
-        if "speakers" in data and data["speakers"]:
-            # Diarization was performed
-            for segment in data["speakers"]:
-                speaker = segment.get("speaker", "Unknown")
-                if speaker and speaker.startswith("SPEAKER_"):
-                    speaker_num = int(speaker.split("_")[1]) + 1
-                    speaker = f"Speaker {speaker_num}"
-                elif not speaker:
-                    speaker = "Unknown"
-                
-                timestamp = segment.get("timestamp", [0, 0])
-                start = timestamp[0] if timestamp and timestamp[0] is not None else 0
-                end = timestamp[1] if timestamp and len(timestamp) > 1 and timestamp[1] is not None else start
-                text = segment.get("text", "").strip()
-                
-                if text:
-                    lines.append(f"[{speaker}][{start:.2f}s -> {end:.2f}s] {text}")
-        
-        elif "chunks" in data:
-            # No diarization - use chunks
-            for chunk in data["chunks"]:
-                start = chunk.get("timestamp", [0, 0])[0] or 0
-                end = chunk.get("timestamp", [0, 0])[1] or start
-                text = chunk.get("text", "").strip()
-                
-                if text:
-                    lines.append(f"[Speaker 1][{start:.2f}s -> {end:.2f}s] {text}")
-        
-        elif "text" in data:
-            lines.append(f"[Speaker 1][0.00s -> 0.00s] {data['text']}")
-        
-        print("✓ Transcription complete", file=sys.stderr)
-        return "\n".join(lines)
+        return format_transcript(data)
         
     finally:
         if os.path.exists(output_path):
             os.remove(output_path)
 
 
+def format_transcript(data: dict) -> str:
+    """Format transcript data to [Speaker][timestamp] text format."""
+    lines = []
+    
+    if "speakers" in data and data["speakers"]:
+        for segment in data["speakers"]:
+            speaker = segment.get("speaker", "Unknown")
+            if speaker and speaker.startswith("SPEAKER_"):
+                speaker_num = int(speaker.split("_")[1]) + 1
+                speaker = f"Speaker {speaker_num}"
+            elif not speaker:
+                speaker = "Unknown"
+            
+            timestamp = segment.get("timestamp", [0, 0])
+            start = timestamp[0] if timestamp and timestamp[0] is not None else 0
+            end = timestamp[1] if timestamp and len(timestamp) > 1 and timestamp[1] is not None else start
+            text = segment.get("text", "").strip()
+            
+            if text:
+                lines.append(f"[{speaker}][{start:.2f}s -> {end:.2f}s] {text}")
+    
+    elif "chunks" in data:
+        for chunk in data["chunks"]:
+            start = chunk.get("timestamp", [0, 0])[0] or 0
+            end = chunk.get("timestamp", [0, 0])[1] or start
+            text = chunk.get("text", "").strip()
+            
+            if text:
+                lines.append(f"[Speaker 1][{start:.2f}s -> {end:.2f}s] {text}")
+    
+    elif "text" in data:
+        lines.append(f"[Speaker 1][0.00s -> 0.00s] {data['text']}")
+    
+    print("✓ Transcription complete", file=sys.stderr)
+    return "\n".join(lines)
+
+
 def identify_speakers_and_fix(transcript: str, filename: str, config: dict) -> str:
-    """Use Gemini to identify speakers from filename and fix transcription errors."""
-    try:
-        from google import genai
-    except ImportError:
-        print("google-genai not installed. Run: ./install_all.sh", file=sys.stderr)
-        return transcript
-    
-    api_key = config["gemini_api_key"]
-    model_name = config["gemini_model"]
-    
-    if not api_key:
+    """Use Gemini to identify speakers from filename and fix errors."""
+    if not config.get("gemini_api_key"):
         print("⚠ No GEMINI_API_KEY - skipping speaker identification", file=sys.stderr)
         return transcript
     
+    print("Identifying speakers and fixing errors...", file=sys.stderr)
+    
+    prompt_template = load_prompt("transcribe_fix")
+    prompt = prompt_template.format(
+        filename=filename,
+        transcript=transcript,
+    )
+    
     try:
-        client = genai.Client(api_key=api_key)
-    except Exception as e:
-        print(f"Error creating Gemini client: {e}", file=sys.stderr)
+        result = call_gemini(prompt, config)
+        if result and "[" in result:
+            print("✓ Speakers identified and errors fixed", file=sys.stderr)
+            return result
         return transcript
-    
-    print(f"Identifying speakers and fixing errors with {model_name}...", file=sys.stderr)
-    
-    prompt = f"""You are a specialized text processing tool for fixing podcast/interview transcripts.
-
-The audio filename is: {filename}
-
-Instructions:
-1. IDENTIFY THE SPEAKERS: Based on the filename, identify who "Speaker 1", "Speaker 2", etc. likely are.
-   - The filename often contains names of the people in the conversation (e.g., "George_Hotz_Lex_Fridman" means George Hotz and Lex Fridman are talking)
-   - Replace "[Speaker N]" with the actual person's name in brackets, e.g., "[Lex Fridman]"
-   - If there is only ONE speaker (e.g., a solo lecture or monologue), identify them and use their name for all lines
-   - If there are TWO speakers (e.g., an interview), identify both and assign names correctly based on context
-   - If you can't determine who a speaker is, keep the original "[Speaker N]" format
-
-2. FIX TRANSCRIPTION ERRORS:
-   - Fix obvious errors in technical terms (e.g., "SISC" -> "CISC", "TinyGuard" -> "TinyGrad", "Kuda" -> "CUDA")
-   - Fix proper nouns (names, libraries, etc.)
-   - Fix obvious word substitutions that don't make sense in context
-
-3. PRESERVE FORMAT:
-   - Keep the timestamps exactly as they are in format [Name][Xs -> Ys]
-   - DO NOT rephrase or change the meaning
-
-4. OUTPUT ONLY the corrected transcript. No introduction or explanation.
-
-Input Transcript:
-{transcript}
-
-Corrected Transcript:"""
-
-    try:
-        response = client.models.generate_content(
-            model=model_name,
-            contents=prompt
-        )
-        fixed_text = response.text.strip()
-        
-        if fixed_text and "[" in fixed_text and "->" in fixed_text:
-            print("✓ Speaker identification and correction complete", file=sys.stderr)
-            return fixed_text
-        else:
-            print("Warning: Unexpected response format, keeping original", file=sys.stderr)
-            return transcript
     except Exception as e:
         print(f"Gemini API error: {e}", file=sys.stderr)
         return transcript
@@ -242,7 +155,7 @@ def main():
         args.file,
         model_name=args.model,
         batch_size=args.batch_size,
-        hf_token=config["hf_token"],
+        hf_token=config.get("hf_token"),
         num_speakers=args.num_speakers,
     )
     

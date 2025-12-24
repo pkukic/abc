@@ -44,6 +44,14 @@ check_and_install "libreoffice" "libreoffice" "LibreOffice" \
 check_and_install "ebook-convert" "calibre" "Calibre" \
     "sudo apt install -y calibre"
 
+# Poppler utils (for PDF to image conversion)
+check_and_install "pdftoppm" "poppler-utils" "Poppler utils" \
+    "sudo apt install -y poppler-utils"
+
+# TeX Live (for LaTeX compilation)
+check_and_install "pdflatex" "texlive" "TeX Live" \
+    "sudo apt install -y texlive-latex-base texlive-latex-extra texlive-fonts-recommended texlive-science"
+
 # Check for CUDA/cuDNN (optional, for GPU acceleration)
 if ldconfig -p 2>/dev/null | grep -q "libcudnn_ops.so.9"; then
     echo "✓ cuDNN 9 found (GPU acceleration enabled)"
@@ -85,12 +93,16 @@ echo ""
 echo "Installing context menus..."
 echo ""
 
+# Install shared libraries first
+source "$SCRIPT_DIR/converters/shared_libs.sh"
+
 # Install converters
 source "$SCRIPT_DIR/converters/docx_to_pdf.sh"
 source "$SCRIPT_DIR/converters/epub_to_pdf.sh"
 source "$SCRIPT_DIR/converters/transcribe_audio.sh"
 source "$SCRIPT_DIR/converters/folder_colors.sh"
 source "$SCRIPT_DIR/converters/clean_code.sh"
+source "$SCRIPT_DIR/converters/notes_to_pdf.sh"
 
 echo ""
 

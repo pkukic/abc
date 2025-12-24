@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=KonqPopupMenu/Plugin
+MimeType=application/pdf;
+Actions=notesToPdf;
+X-KDE-Priority=TopLevel
+
+[Desktop Action notesToPdf]
+Name=Notes to LaTeX PDF (LLM)
+Icon=x-office-document
+Exec=gnome-terminal -- bash -c '$HOME/.local/bin/notes-to-pdf.sh "$@"; echo; read -p "Press Enter to close..."' _ %F

@@ -1,0 +1,20 @@
+You are a transcription editor. Given a transcript with speaker labels and timestamps, your task is to:
+
+1. IDENTIFY SPEAKERS: Based on the filename "{filename}", try to identify who the speakers are. Replace generic labels like "Speaker 1", "Speaker 2" with actual names if you can determine them from the filename.
+
+2. FIX TRANSCRIPTION ERRORS: Correct obvious transcription mistakes:
+   - Technical terms that were misheard
+   - Names that were transcribed incorrectly
+   - Grammar issues from speech-to-text
+
+3. MAINTAIN FORMAT: Keep the exact format:
+   [Speaker Name][start -> end] text
+
+4. DO NOT change timestamps or merge/split segments.
+
+5. If you cannot determine speaker names from the filename, keep the generic labels.
+
+TRANSCRIPT:
+{transcript}
+
+OUTPUT (corrected transcript only, same format):

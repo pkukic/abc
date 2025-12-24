@@ -1,24 +1,20 @@
 #!/bin/bash
-# Transcribes audio/video with 1 speaker (monologue/lecture)
+# Transcribe monologue (1 speaker)
 # Usage: transcribe-monologue.sh file1.mp3 [file2.webm ...]
 
-SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
-VENV_PYTHON="$HOME/.local/share/abc/venv/bin/python"
+source "$(dirname "$(readlink -f "$0")")/lib/common.sh"
 
 for file in "$@"; do
     if [[ -f "$file" ]]; then
         txt_output="${file%.*}_transcript.txt"
-        
-        "$VENV_PYTHON" "$SCRIPT_DIR/transcribe.py" --num-speakers 1 "$file" --output "$txt_output"
+        $ABC_VENV_PYTHON "$ABC_SCRIPT_DIR/transcribe.py" --num-speakers 1 "$file" --output "$txt_output"
         
         if [[ -f "$txt_output" ]]; then
-            echo "✓ Saved transcript to: $txt_output"
+            echo "✓ Saved: $txt_output"
         else
-            echo "✗ Transcription failed for: $file"
+            echo "✗ Failed: $file"
         fi
     fi
 done
 
-if command -v notify-send &> /dev/null; then
-    notify-send "Transcription Complete" "Finished transcribing $# file(s)"
-fi
+abc_notify "Transcription Complete" "Finished transcribing $# file(s)"
