@@ -113,12 +113,15 @@ def transcribe_with_diarization(
             # Diarization was performed
             for segment in data["speakers"]:
                 speaker = segment.get("speaker", "Unknown")
-                if speaker.startswith("SPEAKER_"):
+                if speaker and speaker.startswith("SPEAKER_"):
                     speaker_num = int(speaker.split("_")[1]) + 1
                     speaker = f"Speaker {speaker_num}"
+                elif not speaker:
+                    speaker = "Unknown"
                 
-                start = segment.get("timestamp", [0, 0])[0]
-                end = segment.get("timestamp", [0, 0])[1]
+                timestamp = segment.get("timestamp", [0, 0])
+                start = timestamp[0] if timestamp and timestamp[0] is not None else 0
+                end = timestamp[1] if timestamp and len(timestamp) > 1 and timestamp[1] is not None else start
                 text = segment.get("text", "").strip()
                 
                 if text:
