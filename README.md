@@ -23,8 +23,7 @@ When using Gemini to create Anki flashcards from study materials:
 |--------------------|---------------|--------|-----------|
 | **Convert to PDF** | `.docx`, `.doc`, `.odt`, `.rtf`, `.txt` | PDF | LibreOffice |
 | **Convert to PDF** | `.epub`, `.mobi` | PDF | Calibre |
-| **Transcribe** | `.mp3`, `.webm`, `.wav`, `.ogg`, `.mp4`, `.flac` | Text with timestamps | faster-whisper |
-| **Transcribe + Fix** | `.mp3`, `.webm`, `.wav`, `.ogg`, `.mp4`, `.flac` | Text with AI correction | faster-whisper + Gemini |
+| **Transcribe** | `.mp3`, `.webm`, `.wav`, `.ogg`, `.mp4`, `.flac` | Text with speaker names | insanely-fast-whisper + pyannote + Gemini |
 | **Mark as Red/Green** | Folders | Colored folder icon | Built-in |
 
 ## Installation
@@ -38,21 +37,30 @@ cd abc
 The installer will automatically:
 - Install required dependencies (LibreOffice, Calibre, uv)
 - Create a Python virtual environment at `~/.local/share/abc/venv`
-- Install Python packages (faster-whisper, google-generativeai)
+- Install Python packages (insanely-fast-whisper, google-genai)
 - Set up right-click context menu entries
 
 > **Note**: You may be prompted for your password to install system packages.
 
-### Gemini API Key (for Transcribe + Fix)
+### API Keys
 
-To use the "Transcribe + Fix" feature, add your Gemini API key:
+Create a config file at `~/.config/abc/.env`:
 
 ```bash
 mkdir -p ~/.config/abc
-echo "GEMINI_API_KEY=your_key_here" > ~/.config/abc/.env
+cat > ~/.config/abc/.env << EOF
+# For speaker identification and error correction
+GEMINI_API_KEY=your_gemini_key_here
+
+# For speaker diarization
+HF_TOKEN=your_huggingface_token_here
+EOF
 ```
 
-Get your API key at: https://aistudio.google.com/apikey
+**Get your keys:**
+- Gemini API key: https://aistudio.google.com/apikey
+- HuggingFace token: https://huggingface.co/settings/tokens
+  - You must also accept the model license at: https://huggingface.co/pyannote/speaker-diarization
 
 ## Usage
 
@@ -62,16 +70,12 @@ Get your API key at: https://aistudio.google.com/apikey
 
 ### Transcription
 
-Transcription uses [faster-whisper](https://github.com/SYSTRAN/faster-whisper) with the `distil-large-v3` model.
+Transcription uses [insanely-fast-whisper](https://github.com/Vaibhavs10/insanely-fast-whisper) with [pyannote.audio](https://github.com/pyannote/pyannote-audio) for speaker diarization, then [Gemini](https://gemini.google.com) to identify speakers from the filename and fix transcription errors.
 
-**Options:**
-- **Transcribe** — Fast transcription with timestamps
-- **Transcribe + Fix** — Same as above, but uses Gemini API to fix errors like misheard technical terms (SISC→CISC, TinyGuard→TinyGrad)
-
-Output format:
+Example output (from filename `George_Hotz_Lex_Fridman.mp3`):
 ```
-[0.00s -> 5.23s] What possible ideas do you have for how human species ends?
-[5.23s -> 12.45s] Sure. So I think the most obvious way to me is wireheading.
+[Lex Fridman][0.00s -> 5.23s] What possible ideas do you have for how human species ends?
+[George Hotz][5.23s -> 12.45s] Sure. So I think the most obvious way to me is wireheading.
 ...
 ```
 

@@ -72,7 +72,12 @@ if [[ ! -d "$VENV_DIR" ]]; then
 fi
 
 echo "Installing Python packages in venv..."
+# Core transcription packages
 uv pip install --python "$VENV_DIR/bin/python" faster-whisper google-genai
+
+# Install insanely-fast-whisper for diarization (uses pyannote.audio)
+echo "Installing insanely-fast-whisper for speaker diarization..."
+uv pip install --python "$VENV_DIR/bin/python" insanely-fast-whisper
 
 echo "✓ Python packages installed"
 
@@ -98,3 +103,12 @@ fi
 
 echo ""
 echo "✅ Done! Right-click files to see new context menu options."
+echo ""
+echo "📝 Add your API keys to .env in this directory, then re-run ./install_all.sh:"
+echo "   GEMINI_API_KEY=your_gemini_key"
+echo "   HF_TOKEN=your_huggingface_token"
+echo ""
+echo "   Get keys at:"
+echo "   - Gemini: https://aistudio.google.com/apikey"
+echo "   - HuggingFace: https://huggingface.co/settings/tokens"
+echo "   - Accept model terms: https://huggingface.co/pyannote/speaker-diarization"

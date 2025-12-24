@@ -1,7 +1,6 @@
 #!/bin/bash
-# Transcribes audio/video files with speaker diarization and LLM correction
-# Usage: transcribe-audio.sh file1.mp3 [file2.webm ...]
-# Output: Creates a .txt file next to each input file
+# Transcribes audio/video with 1 speaker (monologue/lecture)
+# Usage: transcribe-monologue.sh file1.mp3 [file2.webm ...]
 
 SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
 VENV_PYTHON="$HOME/.local/share/abc/venv/bin/python"
@@ -10,7 +9,7 @@ for file in "$@"; do
     if [[ -f "$file" ]]; then
         txt_output="${file%.*}_transcript.txt"
         
-        "$VENV_PYTHON" "$SCRIPT_DIR/transcribe.py" "$file" --output "$txt_output"
+        "$VENV_PYTHON" "$SCRIPT_DIR/transcribe.py" --num-speakers 1 "$file" --output "$txt_output"
         
         if [[ -f "$txt_output" ]]; then
             echo "✓ Saved transcript to: $txt_output"
@@ -20,7 +19,6 @@ for file in "$@"; do
     fi
 done
 
-# Show notification when done
 if command -v notify-send &> /dev/null; then
     notify-send "Transcription Complete" "Finished transcribing $# file(s)"
 fi
