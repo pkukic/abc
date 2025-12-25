@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
-"""Convert handwritten PDF notes to LaTeX and then to clean PDF.
+"""Retype PDF - Convert any PDF (handwritten or printed) to clean LaTeX.
 
-Uses Gemini 3 Pro Preview to:
-1. Recognize handwritten text, math, and sketches
+Uses Gemini AI to:
+1. Recognize text, math, and diagrams (handwritten or printed)
 2. Convert to proper LaTeX
-3. Synthesize questions if only answers are present
-4. Compile to PDF
+3. Compile to clean PDF
 """
 
 import argparse
@@ -32,9 +31,12 @@ LATEX_PREAMBLE = r"""\documentclass[11pt,a4paper]{article}
 \usepackage{esint}
 \usepackage{enumitem}
 \usepackage{siunitx}
+\usepackage{multicol}
 \usepackage{tikz-3dplot}
 \usetikzlibrary{arrows.meta,calc,patterns,decorations.markings,decorations.pathmorphing,shapes,positioning,3d}
-\geometry{margin=2.5cm}
+\geometry{margin=1.5cm}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.3em}
 
 \title{%s}
 \date{\today}
@@ -70,7 +72,7 @@ def process_page(image_path: str, page_num: int, total_pages: int, config: dict)
     """Send page image to Gemini and get LaTeX output."""
     print(f"  Processing page {page_num}/{total_pages}...", file=sys.stderr)
     
-    prompt = load_prompt("notes_to_latex")
+    prompt = load_prompt("retype_to_latex")
     
     result = call_gemini(
         prompt,
@@ -102,7 +104,7 @@ def compile_latex(tex_path: str, output_dir: str) -> str:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Convert handwritten PDF notes to clean LaTeX PDF"
+        description="Retype PDF - Convert any PDF to clean LaTeX"
     )
     parser.add_argument("file", help="PDF file to process")
     parser.add_argument("--output", "-o", help="Output PDF path (default: input_clean.pdf)")

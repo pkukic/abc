@@ -121,6 +121,7 @@ def call_gemini(
     config: dict = None,
     model: str = None,
     image_paths: list = None,
+    temperature: float = 1.0,
 ) -> str:
     """Call Gemini API with text and optional images.
     
@@ -129,6 +130,7 @@ def call_gemini(
         config: Optional config dict
         model: Model name override (default uses config["gemini_model"])
         image_paths: Optional list of image file paths to include
+        temperature: Generation temperature (0.0-2.0, higher = more creative)
         
     Returns:
         Response text from Gemini
@@ -163,10 +165,34 @@ def call_gemini(
             
             parts.append(types.Part.from_bytes(data=image_data, mime_type=mime_type))
     
-    response = client.models.generate_content(
-        model=model_name,
-        contents=[types.Content(role="user", parts=parts)],
-    )
+    def _do_request(temp: float):
+        """Make the actual API request with given temperature."""
+        gen_config = types.GenerateContentConfig(
+            temperature=temp,
+        )
+        return client.models.generate_content(
+            model=model_name,
+            contents=[types.Content(role="user", parts=parts)],
+            config=gen_config,
+        )
+    
+    def _is_recitation_error(resp) -> bool:
+        """Check if response failed due to RECITATION."""
+        if resp.text is not None:
+            return False
+        if hasattr(resp, 'candidates') and resp.candidates:
+            candidate = resp.candidates[0]
+            if hasattr(candidate, 'finish_reason'):
+                return 'RECITATION' in str(candidate.finish_reason)
+        return False
+    
+    # First attempt with requested temperature
+    response = _do_request(temperature)
+    
+    # If RECITATION error, retry with higher temperature
+    if _is_recitation_error(response) and temperature < 1.5:
+        print(f"  RECITATION error, retrying with higher temperature...", file=sys.stderr)
+        response = _do_request(1.5)
     
     # Handle None response (blocked content, errors, etc.)
     if response.text is None:

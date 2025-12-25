@@ -14,11 +14,18 @@ RULES FOR ALL DOCUMENTS:
 1. TRANSCRIBE all text, mathematical equations, and formulas accurately
 2. Use proper LaTeX math mode: inline $...$ for simple expressions, display $$...$$ or equation environment for important equations
 3. Preserve the original document structure (sections, subsections, columns, lists)
-4. For multi-column layouts, transcribe column by column
+4. For multi-column layouts, use \begin{multicols}{2}...\end{multicols}
 5. Keep titles, headers, dates, and metadata
 6. For vectors, use \vec{} or \mathbf{}
 7. For Greek letters, use proper LaTeX: \mu, \rho, \pi, etc.
 8. For derivatives, use \frac{d}{dt}, \frac{\partial}{\partial x}, etc.
+
+PAGE FLOW RULES (CRITICAL):
+- Do NOT add \newpage commands - let LaTeX handle page breaks automatically
+- Do NOT try to match the exact page layout of the original - just preserve the content
+- Do NOT add page numbers or headers manually
+- Let content flow naturally across pages
+- Use \vspace{0.5em} for small spacing, not \newpage
 
 RULES FOR HANDWRITTEN NOTES:
 1. If you see an ANSWER without a clear QUESTION/PROBLEM statement:
@@ -28,8 +35,8 @@ RULES FOR HANDWRITTEN NOTES:
 
 RULES FOR PRINTED/TYPESET DOCUMENTS:
 1. Preserve the exact structure and formatting of the original
-2. Use \section, \subsection as appropriate based on visible headings
-3. For formula sheets: maintain the logical grouping of formulas
+2. Use \section*, \subsection* for headings (unnumbered)
+3. For formula sheets: use multicols{2} for two-column layouts
 4. Reproduce tables using tabular environment
 5. No need to synthesize questions - just transcribe what's there
 

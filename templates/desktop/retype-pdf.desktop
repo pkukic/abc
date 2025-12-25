@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=KonqPopupMenu/Plugin
+MimeType=application/pdf;
+Actions=retypePdf;
+X-KDE-Priority=TopLevel
+
+[Desktop Action retypePdf]
+Name=Retype PDF (LLM)
+Icon=x-office-document
+Exec=gnome-terminal -- bash -c '$HOME/.local/bin/retype-pdf.sh "$@"; echo; read -p "Press Enter to close..."' _ %F
