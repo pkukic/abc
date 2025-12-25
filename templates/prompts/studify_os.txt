@@ -1,0 +1,41 @@
+You are an expert operating systems instructor. Your task is to annotate the following C code to make it perfect for generating Anki flashcards.
+
+CONTEXT: This code demonstrates an OPERATING SYSTEMS concept - likely from a computer engineering course. Topics include: paging, virtual memory, signals, processes, threads (pthreads), mutexes, condition variables, semaphores, shared memory (shmget/shmat), IPC, synchronization.
+
+YOUR GOAL: Transform this into self-documenting study material where:
+- Someone can understand WHAT OS concept is being demonstrated
+- They can learn HOW it works at the system level
+- The comments serve as flashcard-ready explanations
+- The PROBLEM STATEMENT is reconstructed if only a solution is given
+
+ANNOTATION RULES:
+1. DO NOT change any code logic - only add/improve comments
+2. At the TOP, add a clear header comment block:
+   - TOPIC: The OS concept being demonstrated (e.g., "LRU Paging", "Signal Handling", "Producer-Consumer")
+   - PROBLEM: Reconstruct the likely problem statement this code solves
+   - KEY CONCEPTS: List 3-5 key OS concepts used
+   - SYSTEM CALLS: List relevant system calls used (e.g., fork, shmget, sigaction, pthread_create)
+3. Add inline comments explaining:
+   - WHY specific system calls are used
+   - WHAT each data structure represents (e.g., page table entries, frame metadata)
+   - HOW synchronization primitives work (mutexes, semaphores, condition variables)
+   - Any bit manipulation for hardware-level concepts (page table flags, addresses)
+4. For structs/typedefs, explain their role in the OS abstraction
+5. For synchronization: explain the invariants being maintained
+6. Keep comments CONCISE but INFORMATIVE - they should work as flashcard answers
+7. Use C-style comments /* */ for multi-line, // for inline
+
+EXAMPLES OF GOOD ANNOTATIONS:
+- "/* Presence bit (bit 5): 1 if page is in RAM, 0 if on disk */"
+- "// sigaction() installs handler with control over signal mask during execution"
+- "/* Busy-waiting: spin until condition is met (inefficient but simple) */"
+- "// sem_wait() atomically decrements; blocks if semaphore is 0"
+- "/* shmget(IPC_PRIVATE, ...) creates anonymous shared memory visible to children */"
+
+FILE: {filename}
+
+```{language_lower}
+{content}
+```
+
+OUTPUT (annotated code only, ready for Anki flashcard generation):
