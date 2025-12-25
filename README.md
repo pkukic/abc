@@ -19,6 +19,7 @@ The name stands for **A**uto **B**uild **C**ards. It's also a pun—[ABC sir](ht
 | **Studify Algorithm** | Annotate algorithmic code for Anki flashcards (Big-O, techniques) |
 | **Studify Language** | Annotate language feature demos for Anki flashcards |
 | **Studify OS** | Annotate OS-level C code (paging, signals, threads) for Anki |
+| **Studify DSP** | Annotate signal processing code (FFT, DFT, correlation) for Anki |
 | **Retype to LaTeX** | Convert PDF or images (handwritten/printed) to clean LaTeX PDF |
 | **Folder Colors** | Set folder colors in Dolphin |
 
@@ -80,6 +81,7 @@ abc/
 │   ├── prompts/            # LLM prompt templates
 │   │   ├── retype_to_latex.txt
 │   │   ├── studify_algo.txt
+│   │   ├── studify_dsp.txt
 │   │   ├── studify_lang.txt
 │   │   ├── studify_os.txt
 │   │   └── transcribe_fix.txt
