@@ -20,6 +20,18 @@ RULES FOR ALL DOCUMENTS:
 7. For Greek letters, use proper LaTeX: \mu, \rho, \pi, etc.
 8. For derivatives, use \frac{d}{dt}, \frac{\partial}{\partial x}, etc.
 
+CIRCUIT DIAGRAMS (use circuitikz):
+When you see electrical/electronic circuits, use circuitikz with these components:
+- Capacitor: to[C, l=$C$] or to[C, l=$X_C$]
+- Inductor: to[L, l=$L$] or to[L, l=$X_L$]
+- Resistor: to[R, l=$R$]
+- Voltage source: to[V, l=$V$] or to[sV, l=$\underline{U}$] (sinusoidal)
+- Current source: to[I, l=$I$] or to[sI, l=$\underline{I}$] (sinusoidal)
+- Ground: node[ground]{}
+- Open terminal: to[short, -o] node[right]{A}
+
+Example: \begin{circuitikz}[scale=0.8] \draw (0,0) to[sV] (0,2) to[R] (2,2) to[C] (2,0) -- (0,0); \end{circuitikz}
+
 PAGE FLOW RULES (CRITICAL):
 - Do NOT add \newpage commands - let LaTeX handle page breaks automatically
 - Do NOT try to match the exact page layout of the original - just preserve the content

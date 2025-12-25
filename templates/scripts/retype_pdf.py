@@ -28,10 +28,13 @@ LATEX_PREAMBLE = r"""\documentclass[11pt,a4paper]{article}
 \usepackage{graphicx}
 \usepackage{geometry}
 \usepackage{tikz}
+\usepackage{circuitikz}
 \usepackage{esint}
 \usepackage{enumitem}
 \usepackage{siunitx}
 \usepackage{multicol}
+\usepackage{cancel}
+\usepackage{booktabs}
 \usepackage{tikz-3dplot}
 \usetikzlibrary{arrows.meta,calc,patterns,decorations.markings,decorations.pathmorphing,shapes,positioning,3d}
 \geometry{margin=1.5cm}
