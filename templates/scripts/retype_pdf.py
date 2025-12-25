@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
-"""Retype PDF - Convert any PDF (handwritten or printed) to clean LaTeX.
+"""Retype PDF - Convert PDF or images (handwritten or printed) to clean LaTeX.
 
 Uses Gemini AI to:
 1. Recognize text, math, and diagrams (handwritten or printed)
 2. Convert to proper LaTeX
 3. Compile to clean PDF
+
+Supports both PDF files and direct image input.
 """
 
 import argparse
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -18,6 +21,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent / "lib"))
 from common import get_config, call_gemini, load_prompt
 
+
+# Image extensions we support
+IMAGE_EXTENSIONS = {'.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp', '.tiff', '.tif'}
 
 # LaTeX document template
 LATEX_PREAMBLE = r"""\documentclass[11pt,a4paper]{article}
@@ -53,6 +59,11 @@ LATEX_CLOSING = r"""
 
 \end{document}
 """
+
+
+def is_image(path: str) -> bool:
+    """Check if a file is an image based on extension."""
+    return Path(path).suffix.lower() in IMAGE_EXTENSIONS
 
 
 def pdf_to_images(pdf_path: str, output_dir: str) -> list:
@@ -107,27 +118,49 @@ def compile_latex(tex_path: str, output_dir: str) -> str:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Retype PDF - Convert any PDF to clean LaTeX"
+        description="Retype PDF - Convert PDF or images to clean LaTeX"
     )
-    parser.add_argument("file", help="PDF file to process")
+    parser.add_argument("files", nargs="+", help="PDF file or image files to process")
     parser.add_argument("--output", "-o", help="Output PDF path (default: input_clean.pdf)")
     parser.add_argument("--keep-tex", action="store_true", help="Keep the .tex file")
     args = parser.parse_args()
     
-    if not Path(args.file).exists():
-        print(f"Error: File not found: {args.file}", file=sys.stderr)
-        sys.exit(1)
+    # Check all files exist
+    for f in args.files:
+        if not Path(f).exists():
+            print(f"Error: File not found: {f}", file=sys.stderr)
+            sys.exit(1)
     
     config = get_config()
-    input_path = Path(args.file)
     
-    print(f"Processing: {input_path.name}", file=sys.stderr)
+    # Determine if we're processing images or a PDF
+    all_images = all(is_image(f) for f in args.files)
+    
+    if all_images:
+        # Direct image input - sort by name for consistent ordering
+        images = sorted(args.files)
+        # Use first image's name for output
+        input_path = Path(images[0])
+        print(f"Processing {len(images)} image(s)...", file=sys.stderr)
+    else:
+        # PDF input - only accept single PDF
+        if len(args.files) > 1:
+            print("Error: Multiple PDFs not supported. Use images for batch input.", file=sys.stderr)
+            sys.exit(1)
+        input_path = Path(args.files[0])
+        if input_path.suffix.lower() != '.pdf':
+            print(f"Error: Expected PDF or images, got: {input_path.suffix}", file=sys.stderr)
+            sys.exit(1)
+        images = None  # Will be populated from PDF
+        print(f"Processing: {input_path.name}", file=sys.stderr)
+    
     print(f"Using model: {config.get('gemini_model')}", file=sys.stderr)
     
     with tempfile.TemporaryDirectory() as tmpdir:
-        # Step 1: Convert PDF to images
-        print("Converting PDF to images...", file=sys.stderr)
-        images = pdf_to_images(args.file, tmpdir)
+        # Step 1: Get images (convert PDF if needed)
+        if images is None:
+            print("Converting PDF to images...", file=sys.stderr)
+            images = pdf_to_images(str(input_path), tmpdir)
         print(f"  Found {len(images)} page(s)", file=sys.stderr)
         
         # Step 2: Process each page with Gemini
@@ -157,7 +190,6 @@ def main():
         else:
             output_path = str(input_path.with_stem(input_path.stem + "_clean").with_suffix(".pdf"))
         
-        import shutil
         if os.path.exists(pdf_path):
             shutil.copy(pdf_path, output_path)
             print(f"✓ Saved PDF: {output_path}", file=sys.stderr)

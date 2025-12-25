@@ -18,7 +18,7 @@ The name stands for **A**uto **B**uild **C**ards. It's also a pun—[ABC sir](ht
 | **Transcribe (Dialogue)** | Audio/video → text for 2 speakers with diarization (supports batch) |
 | **Studify Algorithm** | Annotate algorithmic code for Anki flashcards (Big-O, techniques) |
 | **Studify Language** | Annotate language feature demos for Anki flashcards |
-| **Retype PDF** | Convert any PDF (handwritten or printed) to clean LaTeX PDF |
+| **Retype to LaTeX** | Convert PDF or images (handwritten/printed) to clean LaTeX PDF |
 | **Folder Colors** | Set folder colors in Dolphin |
 
 ## Installation
