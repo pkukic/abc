@@ -81,6 +81,7 @@ abc/
 │   │   ├── retype_to_latex.txt
 │   │   ├── studify_algo.txt
 │   │   ├── studify_lang.txt
+│   │   ├── studify_os.txt
 │   │   └── transcribe_fix.txt
 │   └── scripts/            # Python and shell scripts
 │       ├── lib/
