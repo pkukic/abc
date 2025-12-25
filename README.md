@@ -14,9 +14,8 @@ The name stands for **A**uto **B**uild **C**ards. It's also a pun—[ABC sir](ht
 |---------|-------------|
 | **Document → PDF** | Convert DOCX/ODT/RTF to PDF via LibreOffice |
 | **Ebook → PDF** | Convert EPUB/MOBI to PDF via Calibre |
-| **Transcribe (Monologue)** | Audio/video transcription for 1 speaker |
-| **Transcribe (Dialogue)** | Audio/video transcription for 2 speakers with diarization |
-| **Transcribe (Batch)** | Select multiple files, choose type per file |
+| **Transcribe (Monologue)** | Audio/video → text for 1 speaker (supports batch) |
+| **Transcribe (Dialogue)** | Audio/video → text for 2 speakers with diarization (supports batch) |
 | **Studify Algorithm** | Annotate algorithmic code for Anki flashcards (Big-O, techniques) |
 | **Studify Language** | Annotate language feature demos for Anki flashcards |
 | **Retype PDF** | Convert any PDF (handwritten or printed) to clean LaTeX PDF |
