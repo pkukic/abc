@@ -166,9 +166,18 @@ def main():
         # Step 2: Process each page with Gemini
         print("Processing pages with Gemini...", file=sys.stderr)
         pages_content = []
+        skipped_pages = []
         for i, img_path in enumerate(images, 1):
-            content = process_page(img_path, i, len(images), config)
-            pages_content.append(content)
+            try:
+                content = process_page(img_path, i, len(images), config)
+                pages_content.append(content)
+            except ValueError as e:
+                print(f"  ⚠ Skipping page {i}: {e}", file=sys.stderr)
+                skipped_pages.append(i)
+                pages_content.append(f"% Page {i} skipped due to content restrictions")
+        
+        if skipped_pages:
+            print(f"  Warning: Skipped pages: {skipped_pages}", file=sys.stderr)
         
         # Step 3: Create LaTeX document
         print("Creating LaTeX document...", file=sys.stderr)

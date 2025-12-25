@@ -191,8 +191,13 @@ def call_gemini(
     
     # If RECITATION error, retry with higher temperature
     if _is_recitation_error(response) and temperature < 1.5:
-        print(f"  RECITATION error, retrying with higher temperature...", file=sys.stderr)
+        print(f"  RECITATION error, retrying with temperature 1.5...", file=sys.stderr)
         response = _do_request(1.5)
+    
+    # If still RECITATION, try even higher temperature
+    if _is_recitation_error(response):
+        print(f"  RECITATION error, retrying with temperature 2.0...", file=sys.stderr)
+        response = _do_request(2.0)
     
     # Handle None response (blocked content, errors, etc.)
     if response.text is None:
