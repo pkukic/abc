@@ -21,6 +21,7 @@ The name stands for **A**uto **B**uild **C**ards. It's also a pun—[ABC sir](ht
 | **Studify OS** | Annotate OS-level C code (paging, signals, threads) for Anki |
 | **Studify DSP** | Annotate signal processing code (FFT, DFT, correlation) for Anki |
 | **Retype to LaTeX** | Convert PDF or images (handwritten/printed) to clean LaTeX PDF |
+| **Fix Xournal** | Rebind .xoj/.xopp to new PDF background and export _notes.pdf |
 | **Folder Colors** | Set folder colors in Dolphin |
 
 **Refresh feature:** All LLM-powered tools preserve originals (`.bak` files for code, separate outputs for others). Re-run anytime to regenerate with newer models.

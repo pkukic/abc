@@ -103,6 +103,7 @@ source "$SCRIPT_DIR/converters/transcribe_audio.sh"
 source "$SCRIPT_DIR/converters/folder_colors.sh"
 source "$SCRIPT_DIR/converters/annotate_code.sh"
 source "$SCRIPT_DIR/converters/retype_pdf.sh"
+source "$SCRIPT_DIR/converters/fix_xournal.sh"
 
 echo ""
 
