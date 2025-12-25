@@ -11,8 +11,9 @@ A collection of right-click context menu utilities for file conversion and AI-po
 | **Transcribe (Monologue)** | Audio/video transcription for 1 speaker |
 | **Transcribe (Dialogue)** | Audio/video transcription for 2 speakers with diarization |
 | **Transcribe (Batch)** | Select multiple files, choose type per file |
-| **Clean & Comment Code** | Use Gemini to add educational comments to code |
-| **Notes to LaTeX PDF** | Convert handwritten PDF notes to typeset LaTeX PDF |
+| **Studify Algorithm** | Annotate algorithmic code for Anki flashcards (Big-O, techniques) |
+| **Studify Language** | Annotate language feature demos for Anki flashcards |
+| **Retype PDF** | Convert any PDF (handwritten or printed) to clean LaTeX PDF |
 | **Folder Colors** | Set folder colors in Dolphin |
 
 ## Installation
@@ -50,30 +51,41 @@ Get your API keys:
 
 ```
 abc/
-├── install_all.sh          # Main installer
-├── .env.example            # API key template
+├── assets/
+│   └── logo.png
 ├── converters/             # Installer scripts for each feature
-│   ├── shared_libs.sh      # Installs shared libraries
+│   ├── annotate_code.sh
 │   ├── docx_to_pdf.sh
 │   ├── epub_to_pdf.sh
-│   ├── transcribe_audio.sh
-│   ├── clean_code.sh
-│   ├── notes_to_pdf.sh
-│   └── folder_colors.sh
+│   ├── folder_colors.sh
+│   ├── retype_pdf.sh
+│   ├── shared_libs.sh
+│   └── transcribe_audio.sh
 ├── templates/
 │   ├── desktop/            # KDE service menu files
-│   ├── prompts/            # External LLM prompt templates
-│   │   ├── clean_code.txt
-│   │   ├── notes_to_latex.txt
+│   │   ├── annotate-code.desktop
+│   │   ├── docx-to-pdf.desktop
+│   │   ├── ebook-to-pdf.desktop
+│   │   ├── folder-colors.desktop
+│   │   ├── retype-pdf.desktop
+│   │   └── transcribe-audio.desktop
+│   ├── prompts/            # LLM prompt templates
+│   │   ├── retype_to_latex.txt
+│   │   ├── studify_algo.txt
+│   │   ├── studify_lang.txt
 │   │   └── transcribe_fix.txt
 │   └── scripts/            # Python and shell scripts
-│       ├── lib/            # Shared libraries
-│       │   ├── common.py   # Python utilities (config, Gemini)
-│       │   └── common.sh   # Shell utilities (batch, notify)
+│       ├── lib/
+│       │   ├── common.py
+│       │   ├── common.sh
+│       │   └── __init__.py
+│       ├── annotate_code.py
+│       ├── retype_pdf.py
 │       ├── transcribe.py
-│       ├── clean_code.py
-│       ├── notes_to_pdf.py
 │       └── *.sh            # Shell wrappers
+├── install_all.sh
+├── install_cuda.sh
+├── LICENSE
 └── README.md
 ```
 
