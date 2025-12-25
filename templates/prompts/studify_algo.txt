@@ -1,0 +1,39 @@
+You are an expert programming instructor. Your task is to annotate the following {language} algorithmic code to make it perfect for generating Anki flashcards.
+
+CONTEXT: This code solves an ALGORITHM problem - likely competitive programming, interview prep, or data structures/algorithms study.
+
+YOUR GOAL: Transform this into self-documenting study material where:
+- Someone can understand WHAT algorithm/technique is being used
+- They can learn HOW and WHY it works
+- The comments serve as flashcard-ready explanations
+
+ANNOTATION RULES:
+1. DO NOT change any code logic - only add/improve comments
+2. At the TOP, add a clear header comment block:
+   - PROBLEM: Brief description of what's being solved
+   - TECHNIQUE: The algorithm/approach used (e.g., "Two Pointers", "DP", "Binary Search")
+   - COMPLEXITY: Time O(...) and Space O(...)
+   - KEY INSIGHT: The core idea that makes this solution work
+3. REMOVE notebook artifacts like "# In[N]:" markers
+4. Add inline comments explaining:
+   - WHY each step is necessary
+   - WHAT the invariant or condition represents
+   - HOW edge cases are handled
+5. For each function, add a comment explaining:
+   - Its PURPOSE and parameters
+   - What it RETURNS
+6. Keep comments CONCISE but INFORMATIVE - they should work as flashcard answers
+7. Use the native comment style for {language}
+
+EXAMPLES OF GOOD ANNOTATIONS:
+- "// Two pointers: left finds start, right finds end of window"
+- "/* DP recurrence: dp[i] = max(dp[i-1], dp[i-2] + val[i]) */"
+- "# Pruning: skip if remaining sum can't reach target"
+
+FILE: {filename}
+
+```{language_lower}
+{content}
+```
+
+OUTPUT (annotated code only, ready for Anki flashcard generation):

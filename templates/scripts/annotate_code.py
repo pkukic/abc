@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Clean and comment code files using Gemini LLM.
+"""Annotate code files using Gemini LLM.
 
-Removes notebook artifacts, adds clear educational comments,
-while keeping the code logic unchanged.
+Supports multiple annotation modes:
+- studify_algo: Annotate algorithmic code for Anki flashcards (Big-O, techniques)
+- studify_lang: Annotate language feature demos for Anki flashcards
 """
 
 import argparse
@@ -22,16 +23,23 @@ LANG_MAP = {
     '.java': 'Java',
     '.cpp': 'C++',
     '.c': 'C',
+    '.h': 'C/C++ Header',
+    '.hpp': 'C++ Header',
     '.rs': 'Rust',
     '.go': 'Go',
     '.rb': 'Ruby',
     '.sh': 'Bash',
     '.sql': 'SQL',
+    '.hs': 'Haskell',
+    '.scala': 'Scala',
+    '.kt': 'Kotlin',
+    '.swift': 'Swift',
+    '.cs': 'C#',
 }
 
 
-def clean_and_comment(file_path: str, config: dict) -> str:
-    """Use Gemini to clean and comment the code file."""
+def annotate_code(file_path: str, prompt_name: str, config: dict) -> str:
+    """Use Gemini to annotate the code file with the specified prompt."""
     content = Path(file_path).read_text()
     filename = Path(file_path).name
     
@@ -41,9 +49,10 @@ def clean_and_comment(file_path: str, config: dict) -> str:
     
     print(f"Processing {filename} ({language})...", file=sys.stderr)
     print(f"Using model: {config['gemini_model']}", file=sys.stderr)
+    print(f"Mode: {prompt_name}", file=sys.stderr)
     
     # Load and format prompt
-    prompt_template = load_prompt("clean_code")
+    prompt_template = load_prompt(prompt_name)
     prompt = prompt_template.format(
         language=language,
         language_lower=language.lower(),
@@ -52,15 +61,17 @@ def clean_and_comment(file_path: str, config: dict) -> str:
     )
     
     result = call_gemini(prompt, config)
-    print("✓ Code cleaned and commented", file=sys.stderr)
+    print(f"✓ Code annotated", file=sys.stderr)
     return result
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Clean and comment code files using Gemini LLM"
+        description="Annotate code files using Gemini LLM"
     )
     parser.add_argument("file", help="Code file to process")
+    parser.add_argument("--prompt", "-p", default="studify_algo",
+                        help="Prompt to use (studify_algo, studify_lang)")
     parser.add_argument("--output", "-o", help="Output file (default: overwrite input)")
     parser.add_argument("--backup", "-b", action="store_true",
                         help="Create a .bak backup before overwriting")
@@ -71,7 +82,7 @@ def main():
         sys.exit(1)
     
     config = get_config()
-    result = clean_and_comment(args.file, config)
+    result = annotate_code(args.file, args.prompt, config)
     
     # Output
     output_path = args.output or args.file
