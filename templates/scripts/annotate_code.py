@@ -4,6 +4,9 @@
 Supports multiple annotation modes:
 - studify_algo: Annotate algorithmic code for Anki flashcards (Big-O, techniques)
 - studify_lang: Annotate language feature demos for Anki flashcards
+- studify_os: Annotate OS-level C code for Anki flashcards
+
+Refresh feature: If file.bak exists, uses it as source to allow re-running with newer models.
 """
 
 import argparse
@@ -71,25 +74,35 @@ def main():
     )
     parser.add_argument("file", help="Code file to process")
     parser.add_argument("--prompt", "-p", default="studify_algo",
-                        help="Prompt to use (studify_algo, studify_lang)")
+                        help="Prompt to use (studify_algo, studify_lang, studify_os)")
     parser.add_argument("--output", "-o", help="Output file (default: overwrite input)")
     parser.add_argument("--backup", "-b", action="store_true",
                         help="Create a .bak backup before overwriting")
     args = parser.parse_args()
     
-    if not Path(args.file).exists():
-        print(f"Error: File not found: {args.file}", file=sys.stderr)
+    file_path = Path(args.file)
+    backup_path = Path(args.file + ".bak")
+    
+    # Refresh mode: if .bak exists, use it as source
+    if backup_path.exists():
+        source_path = backup_path
+        print(f"Refresh mode: using {backup_path.name} as source", file=sys.stderr)
+    else:
+        source_path = file_path
+    
+    if not source_path.exists():
+        print(f"Error: File not found: {source_path}", file=sys.stderr)
         sys.exit(1)
     
     config = get_config()
-    result = annotate_code(args.file, args.prompt, config)
+    result = annotate_code(str(source_path), args.prompt, config)
     
     # Output
     output_path = args.output or args.file
     
-    if args.backup and output_path == args.file:
-        backup_path = args.file + ".bak"
-        Path(args.file).rename(backup_path)
+    # Create backup if requested and not in refresh mode
+    if args.backup and not backup_path.exists() and output_path == args.file:
+        file_path.rename(backup_path)
         print(f"Backup saved to: {backup_path}", file=sys.stderr)
     
     Path(output_path).write_text(result)
