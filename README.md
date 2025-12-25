@@ -1,6 +1,12 @@
-# ABC - AI-powered Batch Converters
+# ABC - Auto Build Cards
 
-A collection of right-click context menu utilities for file conversion and AI-powered processing on Linux (KDE).
+<p align="center">
+  <img src="assets/logo.png" alt="ABC Logo" width="128">
+</p>
+
+**ABC** is a collection of right-click context menu utilities for file conversion and AI-powered processing on Linux (KDE). The goal: prepare documents, ebooks, code, and audio/video for Anki flashcard generation.
+
+The name stands for **A**uto **B**uild **C**ards. It's also a pun—[ABC sir](https://www.abcsir.hr/) is a popular brand of spreadable cheese in Croatia.
 
 ## Features
 
@@ -106,6 +112,10 @@ Optional for GPU acceleration:
 ## Usage
 
 After installation, right-click files in Dolphin to see context menu options.
+
+## Related
+
+- [Margo](https://github.com/pkukic/margo) — PDF reader for annotating and discussing papers with Gemini
 
 ## License
 
