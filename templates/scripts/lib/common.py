@@ -168,6 +168,19 @@ def call_gemini(
         contents=[types.Content(role="user", parts=parts)],
     )
     
+    # Handle None response (blocked content, errors, etc.)
+    if response.text is None:
+        # Try to get more info about what went wrong
+        if hasattr(response, 'prompt_feedback'):
+            print(f"Gemini blocked content: {response.prompt_feedback}", file=sys.stderr)
+        if hasattr(response, 'candidates') and response.candidates:
+            candidate = response.candidates[0]
+            if hasattr(candidate, 'finish_reason'):
+                print(f"Finish reason: {candidate.finish_reason}", file=sys.stderr)
+            if hasattr(candidate, 'safety_ratings'):
+                print(f"Safety ratings: {candidate.safety_ratings}", file=sys.stderr)
+        raise ValueError("Gemini returned empty response - content may have been blocked or there was an API error")
+    
     result = response.text.strip()
     
     # Remove markdown code blocks if present

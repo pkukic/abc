@@ -31,6 +31,9 @@ LATEX_PREAMBLE = r"""\documentclass[11pt,a4paper]{article}
 \usepackage{tikz}
 \usepackage{esint}
 \usepackage{enumitem}
+\usepackage{siunitx}
+\usepackage{tikz-3dplot}
+\usetikzlibrary{arrows.meta,calc,patterns,decorations.markings,decorations.pathmorphing,shapes,positioning,3d}
 \geometry{margin=2.5cm}
 
 \title{%s}
@@ -72,7 +75,7 @@ def process_page(image_path: str, page_num: int, total_pages: int, config: dict)
     result = call_gemini(
         prompt,
         config,
-        model=config.get("gemini_model_pro"),
+        model=config.get("gemini_model"),  # Use Flash for speed
         image_paths=[image_path],
     )
     
@@ -84,7 +87,7 @@ def compile_latex(tex_path: str, output_dir: str) -> str:
     for _ in range(2):  # Run twice for references
         subprocess.run(
             ["pdflatex", "-interaction=nonstopmode", "-output-directory", output_dir, tex_path],
-            capture_output=True, text=True, cwd=output_dir
+            capture_output=True, cwd=output_dir  # Don't decode output (may contain non-UTF8)
         )
     
     tex_name = Path(tex_path).stem
@@ -114,7 +117,7 @@ def main():
     input_path = Path(args.file)
     
     print(f"Processing: {input_path.name}", file=sys.stderr)
-    print(f"Using model: {config.get('gemini_model_pro')}", file=sys.stderr)
+    print(f"Using model: {config.get('gemini_model')}", file=sys.stderr)
     
     with tempfile.TemporaryDirectory() as tmpdir:
         # Step 1: Convert PDF to images

@@ -15,7 +15,7 @@ cp "$TEMPLATE_DIR/scripts/lib/common.sh" "$BIN_DIR/lib/"
 chmod +x "$BIN_DIR/lib/common.sh"
 
 # Install prompts
-cp "$TEMPLATE_DIR/../prompts/"*.txt "$BIN_DIR/prompts/" 2>/dev/null || true
+cp "$TEMPLATE_DIR/prompts/"*.txt "$BIN_DIR/prompts/"
 
 # Copy .env file for API keys if it exists
 if [[ -f "$SCRIPT_DIR/.env" ]]; then
