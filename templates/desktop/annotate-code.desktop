@@ -2,7 +2,7 @@
 Type=Service
 ServiceTypes=KonqPopupMenu/Plugin
 MimeType=text/x-python;text/x-script.python;application/x-python;text/javascript;application/javascript;text/x-java;text/x-c;text/x-c++;text/x-csrc;text/x-chdr;text/x-rustsrc;text/x-go;text/x-ruby;application/x-shellscript;text/x-haskell;text/plain;
-Actions=studifyAlgo;studifyLang;studifyOS;studifyDSP;
+Actions=studifyAlgo;studifyLang;studifyOS;studifyDSP;studifyGameTheory;
 X-KDE-Priority=TopLevel
 
 [Desktop Action studifyAlgo]
@@ -24,3 +24,9 @@ Exec=gnome-terminal -- bash -c '$HOME/.local/bin/studify-os.sh "$@"; echo; read 
 Name=Studify DSP (LLM)
 Icon=text-x-script
 Exec=gnome-terminal -- bash -c '$HOME/.local/bin/studify-dsp.sh "$@"; echo; read -p "Press Enter to close..."' _ %F
+
+[Desktop Action studifyGameTheory]
+Name=Studify Game Theory (LLM)
+Icon=text-x-script
+Exec=gnome-terminal -- bash -c '$HOME/.local/bin/studify-game-theory.sh "$@"; echo; read -p "Press Enter to close..."' _ %F
+

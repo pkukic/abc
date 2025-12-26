@@ -20,7 +20,10 @@ The name stands for **A**uto **B**uild **C**ards. It's also a pun—[ABC sir](ht
 | **Studify Language** | Annotate language feature demos for Anki flashcards |
 | **Studify OS** | Annotate OS-level C code (paging, signals, threads) for Anki |
 | **Studify DSP** | Annotate signal processing code (FFT, DFT, correlation) for Anki |
+| **Studify Game Theory** | Annotate game theory code (minimax, alpha-beta, BFS) for Anki |
 | **Retype to LaTeX** | Convert PDF or images (handwritten/printed) to clean LaTeX PDF |
+| **Merge Exam** | Merge exam PDF with solutions (images, code, text) into solved LaTeX PDF |
+| **Solve MCQ Exam** | Solve multiple-choice exams with detailed reasoning (batch support) |
 | **Fix Xournal** | Rebind .xoj/.xopp to new PDF background and export _notes.pdf |
 | **Folder Colors** | Set folder colors in Dolphin |
 
@@ -67,32 +70,45 @@ abc/
 │   ├── annotate_code.sh
 │   ├── docx_to_pdf.sh
 │   ├── epub_to_pdf.sh
+│   ├── fix_xournal.sh
 │   ├── folder_colors.sh
+│   ├── merge_exam.sh
 │   ├── retype_pdf.sh
 │   ├── shared_libs.sh
+│   ├── solve_mcq.sh
 │   └── transcribe_audio.sh
 ├── templates/
 │   ├── desktop/            # KDE service menu files
 │   │   ├── annotate-code.desktop
 │   │   ├── docx-to-pdf.desktop
 │   │   ├── ebook-to-pdf.desktop
+│   │   ├── fix-xournal.desktop
 │   │   ├── folder-colors.desktop
+│   │   ├── merge-exam.desktop
 │   │   ├── retype-pdf.desktop
+│   │   ├── solve-mcq.desktop
 │   │   └── transcribe-audio.desktop
 │   ├── prompts/            # LLM prompt templates
+│   │   ├── merge_exam.txt
+│   │   ├── merge_exam_images.txt
+│   │   ├── merge_exam_mixed.txt
 │   │   ├── retype_to_latex.txt
+│   │   ├── solve_mcq.txt
 │   │   ├── studify_algo.txt
 │   │   ├── studify_dsp.txt
+│   │   ├── studify_game_theory.txt
 │   │   ├── studify_lang.txt
 │   │   ├── studify_os.txt
 │   │   └── transcribe_fix.txt
 │   └── scripts/            # Python and shell scripts
 │       ├── lib/
-│       │   ├── common.py
+│       │   ├── common.py   # Shared utilities (config, Gemini, LaTeX)
 │       │   ├── common.sh
 │       │   └── __init__.py
 │       ├── annotate_code.py
+│       ├── merge_exam.py
 │       ├── retype_pdf.py
+│       ├── solve_mcq.py
 │       ├── transcribe.py
 │       └── *.sh            # Shell wrappers
 ├── install_all.sh

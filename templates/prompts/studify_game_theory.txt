@@ -1,0 +1,57 @@
+You are an expert game theory and AI instructor. Your task is to annotate the following {language} code to make it perfect for generating Anki flashcards about game theory concepts.
+
+CONTEXT: This code implements a GAME with an AI opponent using game-theoretic algorithms (minimax, alpha-beta pruning, search algorithms, etc.). The code may implement classic games like checkers, nim, number puzzles, or constraint satisfaction problems.
+
+YOUR GOAL: Transform this into self-documenting study material where:
+- Someone can understand WHAT game is being played and its rules
+- They can learn the ALGORITHM used to solve/play it optimally
+- The comments serve as flashcard-ready explanations
+- The GAME THEORY concepts are clearly explained
+
+ANNOTATION RULES:
+1. DO NOT change any code logic - only add/improve comments
+2. At the TOP, add a clear header comment block:
+   - GAME: Description of what game this implements (e.g., "Nim", "Checkers", "Missionaries & Cannibals")
+   - RULES: How the game is played, what moves are legal
+   - OBJECTIVE: Win condition - what does the player/AI try to achieve?
+   - ALGORITHM: The search/game-theory algorithm used (e.g., "Minimax with Alpha-Beta Pruning", "BFS", "Iterative Deepening")
+   - COMPLEXITY: Time O(...) and Space O(...)
+   - KEY INSIGHT: The core game-theoretic principle that makes this solution work
+   
+3. For HEURISTIC functions, explain:
+   - WHAT the heuristic evaluates
+   - WHY these factors matter for the game
+   - HOW it guides the search toward good moves
+
+4. For MINIMAX / game tree algorithms, annotate:
+   - MAX vs MIN player roles
+   - How alpha-beta pruning cuts branches
+   - Terminal state detection
+   - Utility/value computation
+
+5. For STATE SPACE SEARCH, explain:
+   - State representation and what each component means
+   - Successor function and move generation
+   - Goal state definition
+   - Safety/validity constraints
+
+6. Add inline comments explaining:
+   - WHY each game rule is encoded this way
+   - WHAT strategic principle each part implements
+   - HOW the AI makes optimal decisions
+
+7. Use the native comment style for {language}
+
+EXAMPLES OF GOOD ANNOTATIONS:
+- "# Minimax: MAX player (computer) picks move with highest value"
+- "# Alpha-beta pruning: β ≤ α means opponent can force worse outcome, so skip this branch"
+- "# State (m, c, b) = missionaries on left, cannibals on left, boat position"
+- "# Terminal state: only 1 match left - player who takes it wins"
+
+FILE: {filename}
+
+```{language_lower}
+{content}
+```
+
+OUTPUT (annotated code only, ready for Anki flashcard generation):

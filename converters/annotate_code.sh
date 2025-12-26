@@ -13,11 +13,13 @@ cp "$TEMPLATE_DIR/scripts/studify-algo.sh" "$BIN_DIR/"
 cp "$TEMPLATE_DIR/scripts/studify-lang.sh" "$BIN_DIR/"
 cp "$TEMPLATE_DIR/scripts/studify-os.sh" "$BIN_DIR/"
 cp "$TEMPLATE_DIR/scripts/studify-dsp.sh" "$BIN_DIR/"
+cp "$TEMPLATE_DIR/scripts/studify-game-theory.sh" "$BIN_DIR/"
 chmod +x "$BIN_DIR/annotate_code.py"
 chmod +x "$BIN_DIR/studify-algo.sh"
 chmod +x "$BIN_DIR/studify-lang.sh"
 chmod +x "$BIN_DIR/studify-os.sh"
 chmod +x "$BIN_DIR/studify-dsp.sh"
+chmod +x "$BIN_DIR/studify-game-theory.sh"
 
 # Copy .env file for API keys if it exists
 if [[ -f "$SCRIPT_DIR/.env" ]]; then
