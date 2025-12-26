@@ -223,3 +223,147 @@ def call_gemini(
         result = "\n".join(lines)
     
     return result
+
+
+# =============================================================================
+# LaTeX Utilities
+# =============================================================================
+
+# Shared LaTeX document preamble - comprehensive packages for math, physics, diagrams
+LATEX_PREAMBLE = r"""\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{physics}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{tikz}
+\usepackage{circuitikz}
+\usepackage{esint}
+\usepackage{enumitem}
+\usepackage{siunitx}
+\usepackage{multicol}
+\usepackage{cancel}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tikz-3dplot}
+\usetikzlibrary{arrows.meta,calc,patterns,decorations.markings,decorations.pathmorphing,shapes,positioning,3d}
+\geometry{margin=2cm}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em}
+
+% Problem environment for exams
+\newcounter{problemcounter}
+\newenvironment{problem}[1][]{%
+    \stepcounter{problemcounter}%
+    \par\vspace{1em}%
+    \noindent\textbf{\Large Zadatak \theproblemcounter} \ifx&#1&\else\hfill\textit{#1}\fi%
+    \par\vspace{0.5em}%
+    \noindent
+}{%
+    \par\vspace{1em}%
+}
+
+% Code listing style
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+}
+
+\title{{{TITLE}}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+"""
+
+LATEX_CLOSING = r"""
+
+\end{document}
+"""
+
+
+def pdf_to_images(pdf_path: str, output_dir: str, prefix: str = "page") -> list:
+    """Convert PDF pages to images using pdftoppm.
+    
+    Args:
+        pdf_path: Path to the PDF file
+        output_dir: Directory to save images
+        prefix: Prefix for output image files (default: "page")
+        
+    Returns:
+        Sorted list of image file paths
+    """
+    import subprocess
+    
+    output_prefix = os.path.join(output_dir, prefix)
+    
+    result = subprocess.run(
+        ["pdftoppm", "-png", "-r", "200", pdf_path, output_prefix],
+        capture_output=True, text=True
+    )
+    
+    if result.returncode != 0:
+        print(f"Error converting PDF: {result.stderr}", file=sys.stderr)
+        sys.exit(1)
+    
+    return sorted(str(f) for f in Path(output_dir).glob(f"{prefix}-*.png"))
+
+
+def compile_latex(tex_path: str, output_dir: str) -> str:
+    """Compile LaTeX to PDF using pdflatex.
+    
+    Args:
+        tex_path: Path to the .tex file
+        output_dir: Directory for output files
+        
+    Returns:
+        Path to the generated PDF (may not exist if compilation failed)
+    """
+    import subprocess
+    
+    for _ in range(2):  # Run twice for references
+        subprocess.run(
+            ["pdflatex", "-interaction=nonstopmode", "-output-directory", output_dir, tex_path],
+            capture_output=True, cwd=output_dir
+        )
+    
+    tex_name = Path(tex_path).stem
+    pdf_path = os.path.join(output_dir, tex_name + ".pdf")
+    
+    if os.path.exists(pdf_path):
+        return pdf_path
+    
+    print("Warning: PDF compilation may have failed. Check .log file.", file=sys.stderr)
+    return pdf_path
+
+
+def build_latex_document(title: str, content: str, page_separator: str = "") -> str:
+    """Build a complete LaTeX document from content.
+    
+    Args:
+        title: Document title
+        content: LaTeX content for body (or list of page contents)
+        page_separator: Optional separator between pages (e.g., "\\newpage")
+        
+    Returns:
+        Complete LaTeX document string
+    """
+    # Escape underscores in title for LaTeX
+    safe_title = title.replace("_", r"\_")
+    
+    latex = LATEX_PREAMBLE.replace("{{TITLE}}", safe_title)
+    
+    if isinstance(content, list):
+        latex += page_separator.join(content)
+    else:
+        latex += content
+    
+    latex += LATEX_CLOSING
+    return latex
+

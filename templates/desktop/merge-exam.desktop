@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=KonqPopupMenu/Plugin
+MimeType=application/pdf;text/plain;text/x-markdown;
+Actions=mergeExam;
+X-KDE-Priority=TopLevel
+
+[Desktop Action mergeExam]
+Name=Merge Exam (LLM)
+Icon=application-pdf
+Exec=gnome-terminal -- bash -c '$HOME/.local/bin/merge-exam.sh "$@"; echo; read -p "Press Enter to close..."' _ %F

@@ -12,74 +12,25 @@ Supports both PDF files and direct image input.
 import argparse
 import os
 import shutil
-import subprocess
 import sys
 import tempfile
 from pathlib import Path
 
 # Add lib to path
 sys.path.insert(0, str(Path(__file__).parent / "lib"))
-from common import get_config, call_gemini, load_prompt
+from common import (
+    get_config, call_gemini, load_prompt,
+    pdf_to_images, compile_latex, build_latex_document
+)
 
 
 # Image extensions we support
 IMAGE_EXTENSIONS = {'.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp', '.tiff', '.tif'}
 
-# LaTeX document template
-LATEX_PREAMBLE = r"""\documentclass[11pt,a4paper]{article}
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage{amsmath,amssymb,amsfonts}
-\usepackage{physics}
-\usepackage{graphicx}
-\usepackage{geometry}
-\usepackage{tikz}
-\usepackage{circuitikz}
-\usepackage{esint}
-\usepackage{enumitem}
-\usepackage{siunitx}
-\usepackage{multicol}
-\usepackage{cancel}
-\usepackage{booktabs}
-\usepackage{tikz-3dplot}
-\usetikzlibrary{arrows.meta,calc,patterns,decorations.markings,decorations.pathmorphing,shapes,positioning,3d}
-\geometry{margin=1.5cm}
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{0.3em}
-
-\title{%s}
-\date{\today}
-
-\begin{document}
-\maketitle
-
-"""
-
-LATEX_CLOSING = r"""
-
-\end{document}
-"""
-
 
 def is_image(path: str) -> bool:
     """Check if a file is an image based on extension."""
     return Path(path).suffix.lower() in IMAGE_EXTENSIONS
-
-
-def pdf_to_images(pdf_path: str, output_dir: str) -> list:
-    """Convert PDF pages to images using pdftoppm."""
-    prefix = os.path.join(output_dir, "page")
-    
-    result = subprocess.run(
-        ["pdftoppm", "-png", "-r", "200", pdf_path, prefix],
-        capture_output=True, text=True
-    )
-    
-    if result.returncode != 0:
-        print(f"Error converting PDF: {result.stderr}", file=sys.stderr)
-        sys.exit(1)
-    
-    return sorted(str(f) for f in Path(output_dir).glob("page-*.png"))
 
 
 def process_page(image_path: str, page_num: int, total_pages: int, config: dict) -> str:
@@ -96,24 +47,6 @@ def process_page(image_path: str, page_num: int, total_pages: int, config: dict)
     )
     
     return result
-
-
-def compile_latex(tex_path: str, output_dir: str) -> str:
-    """Compile LaTeX to PDF using pdflatex."""
-    for _ in range(2):  # Run twice for references
-        subprocess.run(
-            ["pdflatex", "-interaction=nonstopmode", "-output-directory", output_dir, tex_path],
-            capture_output=True, cwd=output_dir  # Don't decode output (may contain non-UTF8)
-        )
-    
-    tex_name = Path(tex_path).stem
-    pdf_path = os.path.join(output_dir, tex_name + ".pdf")
-    
-    if os.path.exists(pdf_path):
-        return pdf_path
-    
-    print("Warning: PDF compilation may have failed. Check .log file.", file=sys.stderr)
-    return pdf_path
 
 
 def main():
@@ -181,10 +114,8 @@ def main():
         
         # Step 3: Create LaTeX document
         print("Creating LaTeX document...", file=sys.stderr)
-        title = input_path.stem.replace("_", " ").title().replace("_", r"\_")
-        latex_content = LATEX_PREAMBLE % title
-        latex_content += "\n\n\\newpage\n\n".join(pages_content)
-        latex_content += LATEX_CLOSING
+        title = input_path.stem.replace("_", " ").title()
+        latex_content = build_latex_document(title, pages_content, "\n\n\\newpage\n\n")
         
         tex_path = os.path.join(tmpdir, "output.tex")
         Path(tex_path).write_text(latex_content)
