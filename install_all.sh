@@ -105,6 +105,7 @@ source "$SCRIPT_DIR/converters/annotate_code.sh"
 source "$SCRIPT_DIR/converters/retype_pdf.sh"
 source "$SCRIPT_DIR/converters/fix_xournal.sh"
 source "$SCRIPT_DIR/converters/merge_exam.sh"
+source "$SCRIPT_DIR/converters/solve_mcq.sh"
 
 echo ""
 
