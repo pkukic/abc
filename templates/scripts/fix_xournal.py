@@ -60,8 +60,8 @@ def main():
                         help="Also save the fixed .xoj/.xopp file")
     args = parser.parse_args()
     
-    xoj_path = Path(args.xoj_file)
-    pdf_path = Path(args.pdf_file)
+    xoj_path = Path(args.xoj_file).resolve()
+    pdf_path = Path(args.pdf_file).resolve()
     
     # Validate inputs
     if not xoj_path.exists():
