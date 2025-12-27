@@ -37,4 +37,4 @@ else
     abc_notify "Retype Complete" "Processed ${#files[@]} file(s)"
 fi
 
-read -p "Press Enter to close..."
+

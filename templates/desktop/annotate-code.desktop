@@ -2,31 +2,31 @@
 Type=Service
 ServiceTypes=KonqPopupMenu/Plugin
 MimeType=text/x-python;text/x-script.python;application/x-python;text/javascript;application/javascript;text/x-java;text/x-c;text/x-c++;text/x-csrc;text/x-chdr;text/x-rustsrc;text/x-go;text/x-ruby;application/x-shellscript;text/x-haskell;text/plain;
+X-KDE-Submenu=Studify
 Actions=studifyAlgo;studifyLang;studifyOS;studifyDSP;studifyGameTheory;
 X-KDE-Priority=TopLevel
 
 [Desktop Action studifyAlgo]
-Name=Studify Algorithm (LLM)
+Name=Algorithm (LLM)
 Icon=text-x-script
-Exec=gnome-terminal -- bash -c '$HOME/.local/bin/studify-algo.sh "$@"; echo; read -p "Press Enter to close..."' _ %F
+Exec=gnome-terminal -- $HOME/.local/bin/studify-algo.sh %F
 
 [Desktop Action studifyLang]
-Name=Studify Language (LLM)
+Name=Language (LLM)
 Icon=text-x-script
-Exec=gnome-terminal -- bash -c '$HOME/.local/bin/studify-lang.sh "$@"; echo; read -p "Press Enter to close..."' _ %F
+Exec=gnome-terminal -- $HOME/.local/bin/studify-lang.sh %F
 
 [Desktop Action studifyOS]
-Name=Studify OS (LLM)
+Name=OS (LLM)
 Icon=text-x-script
-Exec=gnome-terminal -- bash -c '$HOME/.local/bin/studify-os.sh "$@"; echo; read -p "Press Enter to close..."' _ %F
+Exec=gnome-terminal -- $HOME/.local/bin/studify-os.sh %F
 
 [Desktop Action studifyDSP]
-Name=Studify DSP (LLM)
+Name=DSP (LLM)
 Icon=text-x-script
-Exec=gnome-terminal -- bash -c '$HOME/.local/bin/studify-dsp.sh "$@"; echo; read -p "Press Enter to close..."' _ %F
+Exec=gnome-terminal -- $HOME/.local/bin/studify-dsp.sh %F
 
 [Desktop Action studifyGameTheory]
-Name=Studify Game Theory (LLM)
+Name=Game Theory (LLM)
 Icon=text-x-script
-Exec=gnome-terminal -- bash -c '$HOME/.local/bin/studify-game-theory.sh "$@"; echo; read -p "Press Enter to close..."' _ %F
-
+Exec=gnome-terminal -- $HOME/.local/bin/studify-game-theory.sh %F

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=KonqPopupMenu/Plugin
+MimeType=application/vnd.openxmlformats-officedocument.wordprocessingml.document;application/msword;application/vnd.oasis.opendocument.text;application/rtf;application/vnd.openxmlformats-officedocument.presentationml.presentation;application/vnd.ms-powerpoint;application/vnd.oasis.opendocument.presentation;
+Actions=convertOfficeToPDF;
+X-KDE-Priority=TopLevel
+
+[Desktop Action convertOfficeToPDF]
+Name=Office → PDF
+Icon=application-pdf
+Exec=bash -c 'for f in "$@"; do libreoffice --headless --convert-to pdf --outdir "$(dirname "$f")" "$f"; done' _ %F

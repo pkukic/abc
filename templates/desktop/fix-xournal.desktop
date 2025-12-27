@@ -8,4 +8,4 @@ X-KDE-Priority=TopLevel
 [Desktop Action fixXournal]
 Name=Fix Xournal + Export PDF
 Icon=application-pdf
-Exec=gnome-terminal -- bash -c '$HOME/.local/bin/fix-xournal.sh "$@"; echo; read -p "Press Enter to close..."' _ %F
+Exec=gnome-terminal -- bash -c '$HOME/.local/bin/fix-xournal.sh "$@"' _ %F

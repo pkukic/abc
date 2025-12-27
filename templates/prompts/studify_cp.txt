@@ -1,0 +1,56 @@
+You are an expert constraint programming instructor. Your task is to annotate the following MiniZinc code to make it perfect for generating Anki flashcards.
+
+CONTEXT: This code is a CONSTRAINT PROGRAMMING model - it declares variables, domains, and constraints to solve a combinatorial problem. MiniZinc is a high-level constraint modeling language.
+
+YOUR GOAL: Transform this into self-documenting study material where:
+- Someone can understand WHAT problem is being solved
+- They can learn HOW constraints model the problem
+- The comments serve as flashcard-ready explanations
+- The PROBLEM is identified and stated clearly (e.g., Sudoku, N-Queens, Graph Coloring, Scheduling)
+
+ANNOTATION RULES:
+1. DO NOT change any code logic - only add/improve comments
+2. At the TOP, add a clear header comment block:
+   - PROBLEM: Identify the well-known problem (e.g., "N-Queens", "Sudoku", "Knapsack", "Job Shop Scheduling", "Graph Coloring", "Set Cover", "Cryptarithmetic")
+   - STATEMENT: Formal problem statement in plain English
+   - VARIABLES: What the decision variables represent
+   - KEY CONSTRAINTS: The main constraint types used (alldifferent, cumulative, table, etc.)
+   - COMPLEXITY: NP-hard/NP-complete classification if applicable
+3. Add comments explaining each constraint block:
+   - WHAT real-world requirement it models
+   - WHY this constraint type is appropriate
+   - HOW it interacts with other constraints
+4. Explain global constraints when used:
+   - alldifferent: ensures uniqueness
+   - cumulative: resource scheduling with capacity
+   - table: extensional constraint from tuples
+   - element: array indexing as constraint
+   - circuit: Hamiltonian path/cycle
+   - bin_packing: fitting items into bins
+5. For array comprehensions, explain the iteration pattern and what it generates
+6. Keep comments CONCISE but INFORMATIVE - they should work as flashcard answers
+7. Use % for MiniZinc comments
+
+WELL-KNOWN PROBLEMS TO RECOGNIZE:
+- Sudoku: 9x9 grid, alldifferent in rows/columns/boxes
+- N-Queens: place N queens, no attacks on rows/columns/diagonals
+- Graph Coloring: assign colors, adjacent nodes differ
+- Knapsack: maximize value subject to weight capacity
+- Set Cover/Partition: cover elements with minimum subsets
+- Job Shop Scheduling: tasks on machines, precedence/resource constraints
+- Vehicle Routing: visit nodes, minimize distance, capacity constraints
+- Cryptarithmetic: SEND+MORE=MONEY, digits to letters mapping
+
+EXAMPLES OF GOOD ANNOTATIONS:
+- "% alldifferent: each row must contain 1..N exactly once (Sudoku row constraint)"
+- "% Diagonal attack constraint: queens on same diagonal have |row[i]-row[j]| = |i-j|"
+- "% Partition constraint: every student assigned to exactly one table"
+- "% Capacity constraint: sum of assigned items <= bin capacity"
+
+FILE: {filename}
+
+```{language_lower}
+{content}
+```
+
+OUTPUT (annotated MiniZinc code only, ready for Anki flashcard generation):

@@ -12,7 +12,7 @@ The name stands for **A**uto **B**uild **C**ards. It's also a pun—[ABC sir](ht
 
 | Feature | Description |
 |---------|-------------|
-| **Document → PDF** | Convert DOCX/ODT/RTF to PDF via LibreOffice |
+| **Office → PDF** | Convert DOCX/PPTX/ODT/ODP/RTF to PDF via LibreOffice |
 | **Ebook → PDF** | Convert EPUB/MOBI to PDF via Calibre |
 | **Transcribe (Monologue)** | Audio/video → text for 1 speaker (supports batch) |
 | **Transcribe (Dialogue)** | Audio/video → text for 2 speakers with diarization (supports batch) |
@@ -21,6 +21,7 @@ The name stands for **A**uto **B**uild **C**ards. It's also a pun—[ABC sir](ht
 | **Studify OS** | Annotate OS-level C code (paging, signals, threads) for Anki |
 | **Studify DSP** | Annotate signal processing code (FFT, DFT, correlation) for Anki |
 | **Studify Game Theory** | Annotate game theory code (minimax, alpha-beta, BFS) for Anki |
+| **Studify CP** | Annotate MiniZinc constraint programming (Sudoku, N-Queens, scheduling) for Anki |
 | **Retype to LaTeX** | Convert PDF or images (handwritten/printed) to clean LaTeX PDF |
 | **Merge Exam** | Merge exam PDF with solutions (images, code, text) into solved LaTeX PDF |
 | **Solve MCQ Exam** | Solve multiple-choice exams with detailed reasoning (batch support) |
@@ -68,7 +69,7 @@ abc/
 │   └── logo.png
 ├── converters/             # Installer scripts for each feature
 │   ├── annotate_code.sh
-│   ├── docx_to_pdf.sh
+│   ├── office_to_pdf.sh
 │   ├── epub_to_pdf.sh
 │   ├── fix_xournal.sh
 │   ├── folder_colors.sh
@@ -80,13 +81,14 @@ abc/
 ├── templates/
 │   ├── desktop/            # KDE service menu files
 │   │   ├── annotate-code.desktop
-│   │   ├── docx-to-pdf.desktop
+│   │   ├── office-to-pdf.desktop
 │   │   ├── ebook-to-pdf.desktop
 │   │   ├── fix-xournal.desktop
 │   │   ├── folder-colors.desktop
 │   │   ├── merge-exam.desktop
 │   │   ├── retype-pdf.desktop
 │   │   ├── solve-mcq.desktop
+│   │   ├── studify-cp.desktop
 │   │   └── transcribe-audio.desktop
 │   ├── prompts/            # LLM prompt templates
 │   │   ├── merge_exam.txt
@@ -98,6 +100,7 @@ abc/
 │   │   ├── studify_dsp.txt
 │   │   ├── studify_game_theory.txt
 │   │   ├── studify_lang.txt
+│   │   ├── studify_cp.txt
 │   │   ├── studify_os.txt
 │   │   └── transcribe_fix.txt
 │   └── scripts/            # Python and shell scripts

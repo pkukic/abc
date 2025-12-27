@@ -8,9 +8,9 @@ X-KDE-Priority=TopLevel
 [Desktop Action transcribeMonologue]
 Name=Transcribe (Monologue)
 Icon=audio-x-generic
-Exec=gnome-terminal -- bash -c '$HOME/.local/bin/transcribe-monologue.sh "$@"; echo; read -p "Press Enter to close..."' _ %F
+Exec=gnome-terminal -- bash -c '$HOME/.local/bin/transcribe-monologue.sh "$@"' _ %F
 
 [Desktop Action transcribeDialogue]
 Name=Transcribe (Dialogue)
 Icon=audio-x-generic
-Exec=gnome-terminal -- bash -c '$HOME/.local/bin/transcribe-dialogue.sh "$@"; echo; read -p "Press Enter to close..."' _ %F
+Exec=gnome-terminal -- bash -c '$HOME/.local/bin/transcribe-dialogue.sh "$@"' _ %F

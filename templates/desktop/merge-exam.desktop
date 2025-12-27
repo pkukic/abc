@@ -8,4 +8,4 @@ X-KDE-Priority=TopLevel
 [Desktop Action mergeExam]
 Name=Merge Exam (LLM)
 Icon=application-pdf
-Exec=gnome-terminal -- bash -c '$HOME/.local/bin/merge-exam.sh --keep-tex "$@"; echo; read -p "Press Enter to close..."' _ %F
+Exec=gnome-terminal -- bash -c '$HOME/.local/bin/merge-exam.sh --keep-tex "$@"' _ %F

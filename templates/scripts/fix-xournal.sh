@@ -28,7 +28,7 @@ if [[ -z "$xoj_file" ]] || [[ -z "$pdf_file" ]]; then
     echo "Error: Please select exactly one .xoj/.xopp file and one .pdf file"
     echo "  xoj_file: $xoj_file"
     echo "  pdf_file: $pdf_file"
-    read -p "Press Enter to close..."
+    
     exit 1
 fi
 
@@ -40,4 +40,4 @@ $ABC_VENV_PYTHON "$ABC_SCRIPT_DIR/fix_xournal.py" --save "$xoj_file" "$pdf_file"
 
 abc_notify "Xournal Fix Complete" "Exported notes PDF"
 
-read -p "Press Enter to close..."
+

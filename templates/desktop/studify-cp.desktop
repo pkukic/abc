@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=KonqPopupMenu/Plugin
+MimeType=text/x-minizinc;application/x-minizinc;text/plain;
+X-KDE-Submenu=Studify
+Actions=studifyCP;
+X-KDE-Priority=TopLevel
+
+[Desktop Action studifyCP]
+Name=Constraint Programming (LLM)
+Icon=text-x-script
+Exec=gnome-terminal -- bash -c 'for f in "$@"; do case "$f" in *.mzn) $HOME/.local/bin/studify-cp.sh "$f";; esac; done' _ %F

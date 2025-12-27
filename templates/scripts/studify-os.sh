@@ -34,4 +34,3 @@ echo "✅ Complete! Success: $success, Failed: $failed"
 
 abc_notify "Studify OS Complete" "Processed ${#files[@]} file(s)"
 
-read -p "Press Enter to close..."

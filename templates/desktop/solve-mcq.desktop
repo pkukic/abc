@@ -8,4 +8,4 @@ X-KDE-Priority=TopLevel
 [Desktop Action solveMCQ]
 Name=Solve MCQ Exam (LLM)
 Icon=application-pdf
-Exec=gnome-terminal -- bash -c '$HOME/.local/bin/solve-mcq.sh "$@"; echo; read -p "Press Enter to close..."' _ %F
+Exec=gnome-terminal -- bash -c '$HOME/.local/bin/solve-mcq.sh "$@"' _ %F

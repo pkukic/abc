@@ -97,7 +97,7 @@ echo ""
 source "$SCRIPT_DIR/converters/shared_libs.sh"
 
 # Install converters
-source "$SCRIPT_DIR/converters/docx_to_pdf.sh"
+source "$SCRIPT_DIR/converters/office_to_pdf.sh"
 source "$SCRIPT_DIR/converters/epub_to_pdf.sh"
 source "$SCRIPT_DIR/converters/transcribe_audio.sh"
 source "$SCRIPT_DIR/converters/folder_colors.sh"
