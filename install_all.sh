@@ -80,8 +80,8 @@ if [[ ! -d "$VENV_DIR" ]]; then
 fi
 
 echo "Installing Python packages in venv..."
-# Core transcription packages
-uv pip install --python "$VENV_DIR/bin/python" faster-whisper google-genai
+# Core packages
+uv pip install --python "$VENV_DIR/bin/python" faster-whisper google-genai nbconvert
 
 # Install insanely-fast-whisper for diarization (uses pyannote.audio)
 echo "Installing insanely-fast-whisper for speaker diarization..."
@@ -107,6 +107,7 @@ source "$SCRIPT_DIR/converters/fix_xournal.sh"
 source "$SCRIPT_DIR/converters/merge_exam.sh"
 source "$SCRIPT_DIR/converters/solve_mcq.sh"
 source "$SCRIPT_DIR/converters/compile_latex.sh"
+source "$SCRIPT_DIR/converters/notebook_to_py.sh"
 
 echo ""
 

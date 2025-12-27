@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=KonqPopupMenu/Plugin
+MimeType=application/x-ipynb+json;application/json;
+Actions=convertNotebook;
+X-KDE-Priority=TopLevel
+
+[Desktop Action convertNotebook]
+Name=Notebook → Python
+Icon=text-x-python
+Exec=bash -c 'for f in "$@"; do $HOME/.local/share/abc/venv/bin/jupyter nbconvert --to script "$f" && echo "✓ Converted: $f"; done' _ %F
