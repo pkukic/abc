@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=KonqPopupMenu/Plugin
+MimeType=inode/directory;
+Actions=compileLatex;
+X-KDE-Priority=TopLevel
+
+[Desktop Action compileLatex]
+Name=Compile LaTeX (main.tex)
+Icon=text-x-tex
+Exec=gnome-terminal -- $HOME/.local/bin/compile-latex.sh %F
