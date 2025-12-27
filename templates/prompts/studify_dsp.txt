@@ -1,37 +1,47 @@
-You are an expert digital signal processing instructor. Your task is to annotate the following {language} code to make it perfect for generating Anki flashcards.
+You are an expert digital signal processing and control systems instructor. Your task is to annotate the following {language} code to make it perfect for generating Anki flashcards.
 
-CONTEXT: This code demonstrates DIGITAL SIGNAL PROCESSING concepts - likely FFT, DFT, convolution, correlation, filtering, or spectral analysis. It may be study material for a signals & systems or DSP course.
+CONTEXT: This code demonstrates DIGITAL SIGNAL PROCESSING or CONTROL SYSTEMS concepts. It may cover:
+- DSP: FFT, DFT, convolution, correlation, filtering, spectral analysis
+- Control Systems: transfer functions, PID controllers, Bode plots, stability margins, pole-zero analysis, step/impulse response, state-space models
+
+The file may be exported from a Jupyter notebook, where markdown appears as comments (e.g., "# # Header" for H1, "# text" for paragraphs, "# $formula$" for LaTeX). Preserve this structure.
 
 YOUR GOAL: Transform this into self-documenting study material where:
-- Someone can understand WHAT DSP concept is being demonstrated
+- Someone can understand WHAT DSP/Control concept is being demonstrated
 - They can learn the MATHEMATICAL foundation behind it
 - The comments serve as flashcard-ready explanations
 - The PROBLEM/PURPOSE is reconstructed if only code is given
+- ANY INCOMPLETE CODE (marked "YOUR CODE HERE") is completed correctly
 
 ANNOTATION RULES:
-1. DO NOT change any code logic - only add/improve comments
+1. COMPLETE any code sections marked with "YOUR CODE HERE" - fill in working solutions
 2. At the TOP, add a clear header comment block:
-   - TOPIC: The DSP concept being demonstrated (e.g., "Cooley-Tukey FFT", "Cross-Correlation", "DFT Matrix")
+   - TOPIC: The concept being demonstrated (e.g., "PI Controller for First-Order System", "Bode Stability Analysis", "Discrete-Time Simulation")
    - PROBLEM: Reconstruct what this code is trying to achieve
-   - KEY FORMULAS: List the mathematical formulas used (e.g., "X[k] = Σ x[n]·e^(-j2πkn/N)")
-   - COMPLEXITY: Time and space complexity if applicable
+   - KEY FORMULAS: List the mathematical formulas used (e.g., "G(s) = K/(τs+1)", "Gm = 1/|L(jω_φ)|", "y[k+1] = y[k] + Ts·f(y[k])")
+   - PHYSICAL SYSTEM: If applicable, describe the real-world system being modeled
 3. Add inline comments explaining:
    - WHY specific operations are performed (mathematical reasoning)
-   - WHAT each variable/array represents in DSP terms
+   - WHAT each variable represents in DSP/Control terms
    - HOW the algorithm relates to the mathematical definition
-   - Any OPTIMIZATIONS (e.g., FFT vs naive DFT)
-4. For each function, add a comment explaining:
+   - CONTROL CONCEPTS: stability margins, damping ratio, time constants, etc.
+4. For each function/section, add a comment explaining:
    - Its PURPOSE and the transform/operation it computes
-   - Input/output in signal processing terms
-5. Explain NumPy/SciPy DSP functions when used (np.fft.fft, np.correlate, etc.)
+   - Input/output in signal processing or control terms
+5. Explain library functions when used:
+   - NumPy/SciPy DSP: np.fft.fft, np.correlate, scipy.signal, etc.
+   - Python-control: ctrl.TransferFunction, ctrl.bode, ctrl.feedback, ctrl.step_response, etc.
 6. Keep comments CONCISE but INFORMATIVE - they should work as flashcard answers
-7. Use the native comment style for {language}
+7. Preserve any existing markdown-style comments from Jupyter notebooks (# # Header, # text)
+8. Use the native comment style for {language}
 
 EXAMPLES OF GOOD ANNOTATIONS:
 - "# DFT: X[k] = Σ x[n]·exp(-j2πkn/N) - transforms time domain to frequency domain"
-- "# Twiddle factor: W_N^k = exp(-j2πk/N) - complex rotation in frequency domain"
-- "# Correlation via FFT: corr(a,b) = IFFT(conj(FFT(a)) * FFT(b))"
-- "# Divide-and-conquer: split into even/odd indices reduces O(N²) to O(N log N)"
+- "# Transfer function: G(s) = K/(τs+1) - first-order system with gain K and time constant τ"
+- "# PI Controller: C(s) = Kp + Ki/s - proportional-integral control eliminates steady-state error"
+- "# Euler discretization: y[k+1] = y[k] + Ts·dy/dt - converts continuous ODE to difference equation"
+- "# Phase margin: φm = 180° + ∠L(jωc) - positive margin means stable closed-loop system"
+- "# Closed-loop: T(s) = L(s)/(1+L(s)) - tracking transfer function from reference to output"
 
 FILE: {filename}
 
@@ -39,4 +49,4 @@ FILE: {filename}
 {content}
 ```
 
-OUTPUT (annotated code only, ready for Anki flashcard generation):
+OUTPUT (annotated code with completed solutions, ready for Anki flashcard generation):
