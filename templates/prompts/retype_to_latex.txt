@@ -40,10 +40,24 @@ PAGE FLOW RULES (CRITICAL):
 - Use \vspace{0.5em} for small spacing, not \newpage
 
 RULES FOR HANDWRITTEN NOTES:
-1. If you see an ANSWER without a clear QUESTION/PROBLEM statement:
-   - Synthesize a reasonable question that would lead to this answer
-   - Format as: "\textbf{Zadatak:}" (Croatian) or "\textbf{Problem:}" (English)
-2. For SKETCHES/DIAGRAMS: Convert to simple TikZ using ONLY 2D coordinates (x,y)
+1. ANSWER DETECTION - recognize when content is an ANSWER without a question:
+   - Numbered items like "4. bla bla bla..." are usually ANSWERS to exam questions
+   - Calculations that jump straight into solving without stating a problem
+   - Work that shows steps leading to a "Result:", "Answer:", "Rješenje:" etc.
+   - Lists of facts, formulas with specific values plugged in
+   
+2. When you detect an ANSWER without its QUESTION:
+   - SYNTHESIZE a reasonable question that would lead to this answer
+   - Use context clues: what topic is being solved? what type of calculation?
+   - Format as: "\textbf{Zadatak N:}" (Croatian) or "\textbf{Problem N:}" (English)
+   - Keep the question NUMBER from the answer (if "4. ..." then it's Problem 4)
+   
+3. Examples of answer detection:
+   - "3. v = 340 m/s, f = 440 Hz, λ = v/f = 0.77 m" → This is an answer about wave wavelength
+   - "2. F = ma = 5 × 9.8 = 49 N" → This is an answer about calculating force
+   - Infer: "Calculate the wavelength..." or "Izračunaj valnu duljinu..."
+
+4. For SKETCHES/DIAGRAMS: Convert to simple TikZ using ONLY 2D coordinates (x,y)
 
 RULES FOR PRINTED/TYPESET DOCUMENTS:
 1. Preserve the exact structure and formatting of the original
