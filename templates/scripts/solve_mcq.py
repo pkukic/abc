@@ -53,6 +53,9 @@ def main():
     print(f"Using model: {config.get('gemini_model_pro')}", file=sys.stderr)
     
     for exam_file in args.files:
+        # Resolve to absolute path to ensure output goes to correct directory
+        exam_file = str(Path(exam_file).resolve())
+        
         print(f"\n{'='*50}", file=sys.stderr)
         print(f"Processing: {Path(exam_file).name}", file=sys.stderr)
         print(f"{'='*50}", file=sys.stderr)

@@ -80,8 +80,8 @@ def main():
                         help="Create a .bak backup before overwriting")
     args = parser.parse_args()
     
-    file_path = Path(args.file)
-    backup_path = Path(args.file + ".bak")
+    file_path = Path(args.file).resolve()  # Use absolute path
+    backup_path = file_path.with_suffix(file_path.suffix + ".bak")
     
     # Refresh mode: if .bak exists, use it as source
     if backup_path.exists():
@@ -98,14 +98,14 @@ def main():
     result = annotate_code(str(source_path), args.prompt, config)
     
     # Output
-    output_path = args.output or args.file
+    output_path = Path(args.output).resolve() if args.output else file_path
     
     # Create backup if requested and not in refresh mode
-    if args.backup and not backup_path.exists() and output_path == args.file:
+    if args.backup and not backup_path.exists() and output_path == file_path:
         file_path.rename(backup_path)
         print(f"Backup saved to: {backup_path}", file=sys.stderr)
     
-    Path(output_path).write_text(result)
+    output_path.write_text(result)
     print(f"Saved to: {output_path}", file=sys.stderr)
 
 

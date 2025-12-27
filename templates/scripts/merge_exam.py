@@ -240,6 +240,9 @@ def main():
     # Organize files by type
     exam_pdf, solution_pdfs, images, texts, codes = organize_files(args.files)
     
+    # Resolve to absolute paths to ensure outputs go to correct directory
+    exam_pdf = str(Path(exam_pdf).resolve())
+    
     config = get_config()
     
     # Print summary

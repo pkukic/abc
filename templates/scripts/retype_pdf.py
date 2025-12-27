@@ -73,14 +73,14 @@ def main():
         # Direct image input - sort by name for consistent ordering
         images = sorted(args.files)
         # Use first image's name for output
-        input_path = Path(images[0])
+        input_path = Path(images[0]).resolve()
         print(f"Processing {len(images)} image(s)...", file=sys.stderr)
     else:
         # PDF input - only accept single PDF
         if len(args.files) > 1:
             print("Error: Multiple PDFs not supported. Use images for batch input.", file=sys.stderr)
             sys.exit(1)
-        input_path = Path(args.files[0])
+        input_path = Path(args.files[0]).resolve()
         if input_path.suffix.lower() != '.pdf':
             print(f"Error: Expected PDF or images, got: {input_path.suffix}", file=sys.stderr)
             sys.exit(1)
