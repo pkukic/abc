@@ -2,25 +2,36 @@
 Type=Service
 ServiceTypes=KonqPopupMenu/Plugin
 MimeType=audio/mpeg;audio/mp3;video/webm;audio/webm;audio/wav;audio/x-wav;audio/ogg;video/mp4;audio/flac;video/x-matroska;
-Actions=transcribeMonologue;transcribeDialogue;transcribeCroatianMonologue;transcribeCroatianDialogue;
+X-KDE-Submenu=Transcribe
+Actions=transcribeMonologue;transcribeDialogue;transcribeCroatianMonologue;transcribeCroatianDialogue;transcribeGeminiMonologue;transcribeGeminiDialogue;
 X-KDE-Priority=TopLevel
 
 [Desktop Action transcribeMonologue]
-Name=Transcribe (Monologue)
+Name=Monologue (GPU)
 Icon=audio-x-generic
 Exec=gnome-terminal -- bash -c '$HOME/.local/bin/transcribe-monologue.sh "$@"' _ %F
 
 [Desktop Action transcribeDialogue]
-Name=Transcribe (Dialogue)
+Name=Dialogue (GPU)
 Icon=audio-x-generic
 Exec=gnome-terminal -- bash -c '$HOME/.local/bin/transcribe-dialogue.sh "$@"' _ %F
 
 [Desktop Action transcribeCroatianMonologue]
-Name=Transcribe Croatian (Monologue)
+Name=Croatian Monologue (GPU)
 Icon=audio-x-generic
 Exec=gnome-terminal -- bash -c '$HOME/.local/bin/transcribe-croatian-monologue.sh "$@"' _ %F
 
 [Desktop Action transcribeCroatianDialogue]
-Name=Transcribe Croatian (Dialogue)
+Name=Croatian Dialogue (GPU)
 Icon=audio-x-generic
 Exec=gnome-terminal -- bash -c '$HOME/.local/bin/transcribe-croatian-dialogue.sh "$@"' _ %F
+
+[Desktop Action transcribeGeminiMonologue]
+Name=Monologue (Gemini)
+Icon=audio-x-generic
+Exec=gnome-terminal -- bash -c '$HOME/.local/bin/transcribe-gemini-monologue.sh "$@"' _ %F
+
+[Desktop Action transcribeGeminiDialogue]
+Name=Dialogue (Gemini)
+Icon=audio-x-generic
+Exec=gnome-terminal -- bash -c '$HOME/.local/bin/transcribe-gemini-dialogue.sh "$@"' _ %F

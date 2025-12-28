@@ -83,30 +83,46 @@ def transcribe_with_gemini(
     client = get_gemini_client(config)
     
     # Upload file to Gemini
-    print(f"Uploading audio to Gemini...", file=sys.stderr)
+    print(f"Preparing audio for Gemini...", file=sys.stderr)
     
-    # Detect mime type
+    # Detect if video file - extract audio to reduce size
     ext = Path(file_path).suffix.lower()
-    mime_map = {
-        '.mp3': 'audio/mp3',
-        '.wav': 'audio/wav',
-        '.m4a': 'audio/mp4',
-        '.mp4': 'video/mp4',
-        '.webm': 'video/webm',
-        '.ogg': 'audio/ogg',
-        '.flac': 'audio/flac',
-        '.aac': 'audio/aac',
-    }
-    mime_type = mime_map.get(ext, 'audio/mpeg')
+    video_exts = {'.mp4', '.webm', '.mkv', '.avi', '.mov', '.flv'}
     
-    # Copy to temp file with safe ASCII name (Gemini API has issues with unicode filenames)
     import shutil
     temp_dir = tempfile.mkdtemp()
-    safe_filename = f"audio{ext}"
-    temp_path = os.path.join(temp_dir, safe_filename)
-    shutil.copy2(file_path, temp_path)
     
     try:
+        if ext in video_exts:
+            # Extract audio from video using ffmpeg
+            print(f"Extracting audio from video...", file=sys.stderr)
+            audio_path = os.path.join(temp_dir, "audio.mp3")
+            result = subprocess.run(
+                ["ffmpeg", "-i", file_path, "-vn", "-acodec", "libmp3lame", "-q:a", "4", "-y", audio_path],
+                capture_output=True, text=True
+            )
+            if result.returncode != 0 or not os.path.exists(audio_path):
+                print(f"ffmpeg error: {result.stderr}", file=sys.stderr)
+                raise RuntimeError("Failed to extract audio from video")
+            temp_path = audio_path
+            mime_type = "audio/mp3"
+            print(f"✓ Audio extracted", file=sys.stderr)
+        else:
+            # Copy audio file with safe ASCII name (Gemini API has issues with unicode filenames)
+            safe_filename = f"audio{ext}"
+            temp_path = os.path.join(temp_dir, safe_filename)
+            shutil.copy2(file_path, temp_path)
+            mime_map = {
+                '.mp3': 'audio/mp3',
+                '.wav': 'audio/wav',
+                '.m4a': 'audio/mp4',
+                '.ogg': 'audio/ogg',
+                '.flac': 'audio/flac',
+                '.aac': 'audio/aac',
+            }
+            mime_type = mime_map.get(ext, 'audio/mpeg')
+        
+        print(f"Uploading audio to Gemini...", file=sys.stderr)
         uploaded_file = client.files.upload(file=temp_path)
         print(f"✓ File uploaded, waiting for processing...", file=sys.stderr)
         
@@ -148,16 +164,12 @@ If you can identify speakers by name from context, still use Speaker N format.""
 
         print(f"Transcribing with Gemini ({lang_display}, {num_speakers} speaker{'s' if num_speakers > 1 else ''})...", file=sys.stderr)
         
+        # Use gemini-3-flash-preview for audio transcription
+        model_name = config.get("gemini_model", "gemini-3-flash-preview")
+        
         response = client.models.generate_content(
-            model=config.get("gemini_model", "gemini-3-flash-preview"),
-            contents=[
-                types.Content(
-                    parts=[
-                        types.Part.from_uri(file_uri=uploaded_file.uri, mime_type=mime_type),
-                        types.Part.from_text(text=prompt),
-                    ]
-                )
-            ],
+            model=model_name,
+            contents=[prompt, uploaded_file],
         )
         
         result = response.text.strip() if response.text else ""

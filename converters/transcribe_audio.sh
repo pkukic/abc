@@ -12,11 +12,15 @@ cp "$TEMPLATE_DIR/scripts/transcribe-monologue.sh" "$BIN_DIR/"
 cp "$TEMPLATE_DIR/scripts/transcribe-dialogue.sh" "$BIN_DIR/"
 cp "$TEMPLATE_DIR/scripts/transcribe-croatian-monologue.sh" "$BIN_DIR/"
 cp "$TEMPLATE_DIR/scripts/transcribe-croatian-dialogue.sh" "$BIN_DIR/"
+cp "$TEMPLATE_DIR/scripts/transcribe-gemini-monologue.sh" "$BIN_DIR/"
+cp "$TEMPLATE_DIR/scripts/transcribe-gemini-dialogue.sh" "$BIN_DIR/"
 cp "$TEMPLATE_DIR/scripts/transcribe.py" "$BIN_DIR/"
 chmod +x "$BIN_DIR/transcribe-monologue.sh"
 chmod +x "$BIN_DIR/transcribe-dialogue.sh"
 chmod +x "$BIN_DIR/transcribe-croatian-monologue.sh"
 chmod +x "$BIN_DIR/transcribe-croatian-dialogue.sh"
+chmod +x "$BIN_DIR/transcribe-gemini-monologue.sh"
+chmod +x "$BIN_DIR/transcribe-gemini-dialogue.sh"
 chmod +x "$BIN_DIR/transcribe.py"
 
 # Remove old scripts if exist
@@ -32,4 +36,8 @@ fi
 envsubst '$HOME' < "$TEMPLATE_DIR/desktop/transcribe-audio.desktop" > "$MENU_DIR/transcribe-audio.desktop"
 chmod +x "$MENU_DIR/transcribe-audio.desktop"
 
+# Remove old separate Gemini desktop entry if exists
+rm -f "$MENU_DIR/transcribe-gemini.desktop"
+
 echo "✓ Audio/Video transcription menu installed"
+
