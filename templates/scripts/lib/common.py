@@ -247,6 +247,7 @@ LATEX_PREAMBLE = r"""\documentclass[11pt,a4paper]{article}
 \usepackage{booktabs}
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage[version=4]{mhchem}
 \usepackage{tikz-3dplot}
 \usetikzlibrary{arrows.meta,calc,patterns,decorations.markings,decorations.pathmorphing,shapes,positioning,3d}
 \geometry{margin=2cm}

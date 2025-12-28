@@ -32,6 +32,31 @@ When you see electrical/electronic circuits, use circuitikz with these component
 
 Example: \begin{circuitikz}[scale=0.8] \draw (0,0) to[sV] (0,2) to[R] (2,2) to[C] (2,0) -- (0,0); \end{circuitikz}
 
+CHEMISTRY NOTATION (use mhchem package):
+When you see chemical formulas, equations, or reactions, use \ce{} from mhchem:
+- Chemical formulas: \ce{H2O}, \ce{NaCl}, \ce{H2SO4}, \ce{Ca(OH)2}
+- Subscripts/superscripts: \ce{Fe^{2+}}, \ce{SO4^{2-}}, \ce{^{14}C}
+- Reactions: \ce{2H2 + O2 -> 2H2O}
+- Equilibrium: \ce{N2 + 3H2 <=> 2NH3}
+- Precipitation: \ce{AgNO3 + NaCl -> AgCl v + NaNO3}
+- Gas evolution: \ce{CaCO3 + 2HCl -> CaCl2 + H2O + CO2 ^}
+- State symbols: \ce{H2O(l)}, \ce{CO2(g)}, \ce{NaCl(aq)}, \ce{Fe(s)}
+- Reaction conditions: \ce{A ->[catalyst] B}, \ce{A ->[\Delta] B}
+- Oxidation states: \ce{Fe^{II}}, \ce{Mn^{VII}}
+- Isotopes: \ce{^{238}_{92}U}
+- Electron notation: \ce{Fe^{2+} + 2e^- -> Fe}
+
+For organic chemistry:
+- Single bonds: \ce{C-C}
+- Double bonds: \ce{C=C}
+- Triple bonds: \ce{C#C}
+- Benzene rings: Can denote as \ce{C6H6} or use chemfig for structures
+
+Examples:
+\ce{H2SO4 + 2NaOH -> Na2SO4 + 2H2O}
+\ce{CH3COOH + NaOH -> CH3COONa + H2O}
+\ce{2Fe + 3Cl2 -> 2FeCl3}
+
 PAGE FLOW RULES (CRITICAL):
 - Do NOT add \newpage commands - let LaTeX handle page breaks automatically
 - Do NOT try to match the exact page layout of the original - just preserve the content

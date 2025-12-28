@@ -87,6 +87,9 @@ def organize_files(files: list) -> tuple:
     """Organize input files into exam PDF and solution materials.
     
     Returns: (exam_pdf, solution_images, solution_texts, solution_codes)
+    
+    If no PDF is provided, exam_pdf will be None and all images are treated
+    as source material for generating the exam.
     """
     pdfs = []
     images = []
@@ -116,6 +119,14 @@ def organize_files(files: list) -> tuple:
     exam_pdf = None
     solution_pdfs = []
     
+    if len(pdfs) == 0:
+        # No PDF - images-only mode
+        if not images:
+            print("Error: No PDF or images provided.", file=sys.stderr)
+            sys.exit(1)
+        # All images will be processed together
+        return None, [], images, texts, codes
+    
     if len(pdfs) == 1:
         # If only one PDF and we have other solution materials, it's the exam
         if images or texts or codes:
@@ -141,9 +152,6 @@ def organize_files(files: list) -> tuple:
             sorted_pdfs = sorted(pdfs)
             exam_pdf = sorted_pdfs[0]
             solution_pdfs = sorted_pdfs[1:]
-    elif len(pdfs) == 0:
-        print("Error: No PDF file provided. Need at least one exam PDF.", file=sys.stderr)
-        sys.exit(1)
     
     return exam_pdf, solution_pdfs, images, texts, codes
 
@@ -228,11 +236,55 @@ def merge_with_gemini(
     return result
 
 
+def merge_images_only_with_gemini(
+    images: list,
+    text_content: str,
+    code_content: str,
+    config: dict
+) -> str:
+    """Generate exam from images only (no PDF source)."""
+    
+    # Build the prompt with available materials
+    prompt_parts = []
+    prompt_parts.append(load_prompt("merge_exam_from_images"))
+    
+    # Add text/code content to prompt
+    materials_section = []
+    
+    if text_content:
+        materials_section.append(f"## TEXT NOTES/SOLUTIONS:\n{text_content}")
+    
+    if code_content:
+        materials_section.append(f"## SOURCE CODE FILES:\n{code_content}")
+    
+    if materials_section:
+        prompt_parts.append("\n\n---\n" + "\n\n".join(materials_section))
+    
+    prompt = "\n".join(prompt_parts)
+    
+    # Summary for user
+    print(f"  Sending to Gemini:", file=sys.stderr)
+    print(f"    - {len(images)} source image(s)", file=sys.stderr)
+    if text_content:
+        print(f"    - Text notes included", file=sys.stderr)
+    if code_content:
+        print(f"    - Source code included", file=sys.stderr)
+    
+    result = call_gemini(
+        prompt,
+        config,
+        model=config.get("gemini_model_pro"),
+        image_paths=images,
+    )
+    
+    return result
+
+
 def main():
     parser = argparse.ArgumentParser(
-        description="Merge Exam - Combine exam PDF with solutions (images, text, code)"
+        description="Merge Exam - Combine exam PDF with solutions (images, text, code) or generate from images only"
     )
-    parser.add_argument("files", nargs="+", help="Exam PDF + solution files (images, text, code, any order)")
+    parser.add_argument("files", nargs="+", help="Exam PDF + solution files, OR just images (any order)")
     parser.add_argument("--output", "-o", help="Output PDF path (default: input_solved.pdf)")
     parser.add_argument("--keep-tex", action="store_true", help="Keep the .tex file")
     args = parser.parse_args()
@@ -240,10 +292,77 @@ def main():
     # Organize files by type
     exam_pdf, solution_pdfs, images, texts, codes = organize_files(args.files)
     
-    # Resolve to absolute paths to ensure outputs go to correct directory
-    exam_pdf = str(Path(exam_pdf).resolve())
-    
     config = get_config()
+    
+    # Check if images-only mode
+    if exam_pdf is None:
+        # Images-only mode
+        print(f"=== Images-Only Mode ===", file=sys.stderr)
+        print(f"Source images: {len(images)}", file=sys.stderr)
+        if texts:
+            print(f"Text files: {', '.join(Path(p).name for p in texts)}", file=sys.stderr)
+        if codes:
+            print(f"Code files: {', '.join(Path(p).name for p in codes)}", file=sys.stderr)
+        print(f"Using model: {config.get('gemini_model_pro')}", file=sys.stderr)
+        
+        # Sort images by name for consistent ordering
+        images = sorted(images)
+        
+        # Resolve paths
+        images = [str(Path(p).resolve()) for p in images]
+        
+        with tempfile.TemporaryDirectory() as tmpdir:
+            # Read text and code files
+            text_content = read_text_files(texts)
+            code_content = read_code_files(codes)
+            
+            # Send to Gemini for generation
+            print("Generating exam with Gemini AI...", file=sys.stderr)
+            merged_content = merge_images_only_with_gemini(
+                images, text_content, code_content, config
+            )
+            
+            # Create LaTeX document
+            print("Creating LaTeX document...", file=sys.stderr)
+            # Use first image name as title basis
+            title = Path(images[0]).stem.replace("_", " ").title()
+            if len(images) > 1:
+                title = "Exam"  # Generic title for multiple images
+            latex_content = build_latex_document(title, merged_content)
+            
+            tex_path = os.path.join(tmpdir, "output.tex")
+            Path(tex_path).write_text(latex_content)
+            
+            # Compile to PDF
+            print("Compiling LaTeX to PDF...", file=sys.stderr)
+            pdf_path = compile_latex(tex_path, tmpdir)
+            
+            # Copy output
+            if args.output:
+                output_path = args.output
+            else:
+                # Use first image directory and name
+                first_image = Path(images[0])
+                output_path = str(first_image.parent / (first_image.stem + "_exam.pdf"))
+            
+            if os.path.exists(pdf_path):
+                shutil.copy(pdf_path, output_path)
+                print(f"✓ Saved PDF: {output_path}", file=sys.stderr)
+                
+                if args.keep_tex:
+                    tex_output = output_path.replace(".pdf", ".tex")
+                    shutil.copy(tex_path, tex_output)
+                    print(f"✓ Saved TeX: {tex_output}", file=sys.stderr)
+            else:
+                print("✗ PDF compilation failed", file=sys.stderr)
+                tex_output = output_path.replace(".pdf", ".tex")
+                shutil.copy(tex_path, tex_output)
+                print(f"  Saved TeX for debugging: {tex_output}", file=sys.stderr)
+                sys.exit(1)
+        return
+    
+    # Standard PDF mode
+    exam_pdf = str(Path(exam_pdf).resolve())
     
     # Print summary
     print(f"Exam PDF: {Path(exam_pdf).name}", file=sys.stderr)
