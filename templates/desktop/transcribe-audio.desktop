@@ -2,7 +2,7 @@
 Type=Service
 ServiceTypes=KonqPopupMenu/Plugin
 MimeType=audio/mpeg;audio/mp3;video/webm;audio/webm;audio/wav;audio/x-wav;audio/ogg;video/mp4;audio/flac;video/x-matroska;
-Actions=transcribeMonologue;transcribeDialogue;
+Actions=transcribeMonologue;transcribeDialogue;transcribeCroatianMonologue;transcribeCroatianDialogue;
 X-KDE-Priority=TopLevel
 
 [Desktop Action transcribeMonologue]
@@ -14,3 +14,13 @@ Exec=gnome-terminal -- bash -c '$HOME/.local/bin/transcribe-monologue.sh "$@"' _
 Name=Transcribe (Dialogue)
 Icon=audio-x-generic
 Exec=gnome-terminal -- bash -c '$HOME/.local/bin/transcribe-dialogue.sh "$@"' _ %F
+
+[Desktop Action transcribeCroatianMonologue]
+Name=Transcribe Croatian (Monologue)
+Icon=audio-x-generic
+Exec=gnome-terminal -- bash -c '$HOME/.local/bin/transcribe-croatian-monologue.sh "$@"' _ %F
+
+[Desktop Action transcribeCroatianDialogue]
+Name=Transcribe Croatian (Dialogue)
+Icon=audio-x-generic
+Exec=gnome-terminal -- bash -c '$HOME/.local/bin/transcribe-croatian-dialogue.sh "$@"' _ %F

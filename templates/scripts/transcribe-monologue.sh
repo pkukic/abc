@@ -7,7 +7,7 @@ source "$(dirname "$(readlink -f "$0")")/lib/common.sh"
 for file in "$@"; do
     if [[ -f "$file" ]]; then
         txt_output="${file%.*}_transcript.txt"
-        $ABC_VENV_PYTHON "$ABC_SCRIPT_DIR/transcribe.py" --num-speakers 1 "$file" --output "$txt_output"
+        $ABC_VENV_PYTHON "$ABC_SCRIPT_DIR/transcribe.py" --num-speakers 1 --language english "$file" --output "$txt_output"
         
         if [[ -f "$txt_output" ]]; then
             echo "✓ Saved: $txt_output"

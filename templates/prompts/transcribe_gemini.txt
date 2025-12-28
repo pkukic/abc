@@ -1,0 +1,17 @@
+Transcribe this audio file in {language}.
+
+{speaker_instruction}
+
+Output format - each segment on its own line:
+[Speaker N][START_SECONDSs -> END_SECONDSs] Transcribed text here
+
+Example output:
+[Speaker 1][0.00s -> 5.23s] Hello, how are you today?
+[Speaker 2][5.50s -> 8.12s] I'm doing well, thank you for asking.
+
+Requirements:
+- Use the exact format shown above with timestamps in seconds (two decimal places)
+- Include ALL spoken content
+- Each speaker change or natural pause should be a new line
+- Do not add any commentary, headers, or explanations - ONLY the transcript lines
+- Transcribe in {language} language

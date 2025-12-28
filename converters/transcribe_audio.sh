@@ -10,9 +10,13 @@ mkdir -p "$BIN_DIR"
 # Install helper scripts
 cp "$TEMPLATE_DIR/scripts/transcribe-monologue.sh" "$BIN_DIR/"
 cp "$TEMPLATE_DIR/scripts/transcribe-dialogue.sh" "$BIN_DIR/"
+cp "$TEMPLATE_DIR/scripts/transcribe-croatian-monologue.sh" "$BIN_DIR/"
+cp "$TEMPLATE_DIR/scripts/transcribe-croatian-dialogue.sh" "$BIN_DIR/"
 cp "$TEMPLATE_DIR/scripts/transcribe.py" "$BIN_DIR/"
 chmod +x "$BIN_DIR/transcribe-monologue.sh"
 chmod +x "$BIN_DIR/transcribe-dialogue.sh"
+chmod +x "$BIN_DIR/transcribe-croatian-monologue.sh"
+chmod +x "$BIN_DIR/transcribe-croatian-dialogue.sh"
 chmod +x "$BIN_DIR/transcribe.py"
 
 # Remove old scripts if exist
