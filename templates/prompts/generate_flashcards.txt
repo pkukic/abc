@@ -14,7 +14,7 @@ AVAILABLE CARD TYPES:
 {available_models}
 
 YOUR TASK:
-1. Analyze the content to understand its topic, complexity, and key concepts
+1. Analyze the content to identify its **key ideas**, **key insights**, and **core reasoning**
 2. Generate an appropriate number of flashcards based on content complexity:
    - Simple/short content: 3-8 cards
    - Medium complexity: 8-15 cards
@@ -22,32 +22,140 @@ YOUR TASK:
 3. Use a MIX of card types for variety and better retention
 4. Choose an appropriate deck - PREFER using an existing deck if one fits the content
 
+---
+
+QUESTION QUALITY HIERARCHY (CRITICAL):
+
+Your cards should follow this distribution:
+- **~60% Reasoning/Understanding**: "Why does X work this way?", "What problem does X solve?", "What happens if...?", "Why is X better than Y for this case?"
+- **~25% Application/Implication**: "When would you use X?", "What does X imply about Y?", "How would you approach [problem type]?"
+- **~15% Key Facts**: Important names, formulas, or definitions that anchor the reasoning (these ARE acceptable, just not the majority)
+
+PRIORITIZE questions that test:
+1. **Causal reasoning**: Why does this work? What causes this effect?
+2. **Trade-offs and limitations**: What's the downside? When does this fail?
+3. **Connections**: How does X relate to Y? What does this imply?
+4. **Problem-solving**: What approach would you use? What's the key insight?
+
+ACCEPTABLE but secondary:
+- Key terminology that unlocks the domain
+- Important names/attributions (authors, inventors)
+- Specific values when they carry conceptual weight (e.g., "94% of H100 compute is tensor cores" matters; "80GB HBM3" is less important)
+
+AVOID:
+- Trivia that doesn't aid understanding
+- Definitions that could be looked up in 5 seconds
+- "What is X called?" when the name itself isn't the insight
+- Questions where the answer is arbitrary rather than reasoned
+
+---
+
+CONTENT-TYPE SPECIFIC GUIDELINES:
+
+**For CODE files:**
+- Focus on the CONCEPTS and PATTERNS demonstrated, not syntax memorization
+- Ask "Why does this produce [unexpected result]?" for gotchas/edge cases
+- Ask "When would you use X instead of Y?" for language features
+- Include complexity analysis where relevant (Big-O notation)
+- Test understanding of trade-offs and design decisions
+- Good: "In deklaracija_auto.cpp, why does `auto c = b - '0'` deduce `int` instead of `char`?"
+- Good: "When would you use `decltype` over `auto` for type deduction?"
+- Bad: "What keyword deduces types from initializers in C++?"
+
+**For TECHNICAL BLOG POSTS / ARCHITECTURE DEEP-DIVES:**
+- Lead with "why this matters" before "what it is"
+- Test understanding of bottlenecks and their solutions
+- Ask about design philosophy and trade-offs
+- Good: "In 'GPUs Go Brrr,' why do the authors claim that keeping tensor cores fed is 'the entire game' for H100 utilization?"
+- Good: "What problem does memory swizzling solve, and why is it necessary for WGMMA instructions?"
+- Bad: "How much L2 cache does an H100 have?"
+
+**For EDUCATIONAL TALKS / LECTURES (transcripts):**
+- Capture the progression of ideas (each concept often solves a limitation of the previous)
+- Test "what limitation does this address?" not just "what is this?"
+- Good: "In the branch prediction talk, why does a two-bit saturating counter handle 'mostly taken with rare exceptions' better than a one-bit predictor?"
+- Good: "What is the fundamental trade-off between global and local branch history schemes?"
+- Bad: "What year was the Intel Pentium released?"
+
+**For PROBLEM SETS / WORKED SOLUTIONS:**
+- Prioritize the METHODOLOGY and KEY FORMULAS over specific numerical answers
+- Create cards that test "What approach would you use for [problem type]?"
+- Include formula cards paired with physical/mathematical intuition
+- For multi-step problems, focus on the critical insight that unlocks the solution
+- Good: "To find escape velocity, what physical principle determines the formula, and what does each term represent?"
+- Bad: "What was the escape velocity calculated in problem 1?"
+
+**For PSYCHOLOGY / SELF-HELP / FRAMEWORK content:**
+- Test the causal chain, not just the terminology
+- Ask "according to this framework, why does X lead to Y?"
+- Test the mechanism, not just the label
+- Good: "According to the anxiety framework, why does 'fighting anxiety' guarantee both wins and losses?"
+- Good: "How does the concept of samskaras explain why anxiety feels familiar even in new situations?"
+- Bad: "What Sanskrit term refers to stored emotional impressions?"
+
+**For PODCAST / INTERVIEW TRANSCRIPTS:**
+- Extract concrete claims, predictions, and insights—ignore filler and tangents
+- Attribute opinions clearly: "According to [Speaker Name], ..."
+- Focus on unique perspectives or insider knowledge not found elsewhere
+- Skip small talk, repeated points, and vague statements
+- Good: "According to Jim Keller, what is the main bottleneck limiting AI chip performance?"
+- Bad: "What company does Jim Keller work for?"
+
+**For MATHEMATICAL / THEORETICAL PAPERS:**
+- For key theorems: create cards for both the formal statement AND the intuitive meaning
+- Ask "What does [theorem/result] imply about [practical situation]?"
+- Include formulas only when the formula itself IS the insight
+- Test understanding of assumptions, limitations, and scope
+- Good: "What does the path kernel in 'Every Model Learned by Gradient Descent Is Approximately a Kernel Machine' intuitively measure?"
+- Bad: "Who wrote the paper about gradient descent and kernel machines?"
+
+**For SCIENTIFIC RESEARCH PAPERS:**
+- Lead with the main finding/contribution before drilling into methods
+- Test the "so what?"—why does this result matter?
+- Include cards about methodology only when the method is novel or reusable
+- Address limitations and open questions raised by the authors
+- Good: "In the Banks et al. pupil shape study, why do ambush predators benefit from vertical-slit pupils specifically?"
+- Bad: "How many species were in the database for the pupil study?"
+
+**For NON-ENGLISH CONTENT:**
+- Generate cards in the SAME LANGUAGE as the source material
+- Keep technical terms and proper nouns in their original form
+- For mixed-language sources, match the dominant language
+
+---
+
 DECK SELECTION (IMPORTANT):
 - First, check the EXISTING DECKS list above
 - If an existing deck fits the content, USE THAT EXACT DECK NAME
 - Only create a new deck if no existing deck is appropriate
-- Use hierarchical names with :: separator (e.g., "Computer Science::Machine Learning::Topic")
+- Use hierarchical names with :: separator (e.g., "Computer Science::Systems::GPU Architecture")
 - Match the existing hierarchy style when creating sub-decks
 
 CARD TYPE GUIDELINES:
 - "Basic": Question → Answer format. ALWAYS phrase the front as a clear question.
-- "Basic (and reversed card)": Term ↔ Definition pairs (creates both directions)
+- "Basic (and reversed card)": Term ↔ Definition pairs (creates both directions). Use sparingly—only for true bidirectional relationships where BOTH directions test understanding.
 - "Cloze": Fill-in-the-blank. The text MUST be phrased as a question or prompt, not just a statement.
 
 CRITICAL CARD QUALITY RULES:
 1. EVERY card must have a clear question or prompt on the front/text
 2. For Basic cards: Front MUST be a question (Who/What/Why/How/When/Where/Which/Explain/Describe)
-3. For Cloze cards: Frame as questions that test understanding
-4. Avoid statements - always frame content as questions
+3. For Cloze cards: Frame as questions that test understanding, not gap-fill trivia
+4. Avoid bare statements—always frame content as questions
 
 5. **ALWAYS INCLUDE SOURCE CONTEXT**: Never use vague references like "the paper", "this book", "the author". 
    Instead, use the actual title/name from the SOURCE above:
    - BAD: "In the context of the paper, what is X?"
-   - GOOD: "In the CoDi paper (Composable Diffusion), what is X?"
-   - BAD: "According to the book, what does Y mean?"
-   - GOOD: "In 'Deep Learning' by Goodfellow, what does Y mean?"
+   - GOOD: "In 'GPUs Go Brrr,' what is X?"
+   - BAD: "According to the speaker, what does Y mean?"
+   - GOOD: "In the branch prediction talk, what does Y mean?"
    
-   This ensures cards are still meaningful when reviewed months later without context.
+   This ensures cards remain meaningful when reviewed months later without context.
+
+6. **AVOID REDUNDANT CARDS**: Do not create multiple cards testing the same underlying concept.
+
+7. **ANSWERS SHOULD EXPLAIN, NOT JUST STATE**: For reasoning questions, the answer should include the "because" or mechanism, not just restate the fact.
+   - BAD answer: "Two-bit predictors are better."
+   - GOOD answer: "A two-bit saturating counter requires two consecutive mispredictions to flip the prediction, so a single anomalous branch (like exiting a loop) doesn't corrupt the learned pattern."
 
 MATH AND FORMULAS:
 For mathematical notation, use LaTeX with these delimiters:
@@ -56,8 +164,8 @@ For mathematical notation, use LaTeX with these delimiters:
 Use standard LaTeX commands: \\alpha, \\beta, \\sum, \\prod, \\frac{{a}}{{b}}, etc.
 
 CLOZE CARD SYNTAX:
-- Single cloze: "In the XYZ paper, what is the powerhouse of the cell? The {{{{c1::mitochondria}}}}"
-- Multiple clozes: "Who created {{{{c1::Python}}}}? {{{{c2::Guido van Rossum}}}}"
+- Single cloze: "What is the powerhouse of the cell? The {{c1::mitochondria}}"
+- Multiple clozes: "{{c1::Python}} was created by {{c2::Guido van Rossum}}"
 - For Cloze cards, use "text" field (not front/back)
 
 OUTPUT FORMAT:
@@ -65,16 +173,19 @@ Return ONLY valid JSON:
 {{
   "deck": "Existing::Deck::Name or New::Deck::Name",
   "cards": [
-    {{"type": "Basic", "front": "In the [Source Name], what is X?", "back": "X is..."}},
-    {{"type": "Basic (and reversed card)", "front": "Term", "back": "Definition"}},
-    {{"type": "Cloze", "text": "In [Source Name], what does X do? It {{{{c1::performs action}}}}"}}
+    {{"type": "Basic", "front": "In [Source Name], why does X cause Y?", "back": "Because [mechanism/reasoning]..."}},
+    {{"type": "Basic", "front": "What trade-off does X address?", "back": "X trades off [A] for [B] because..."}},
+    {{"type": "Cloze", "text": "In [Source Name], the key insight is that {{{{c1::reasoning/mechanism}}}}"}}
   ]
 }}
 
 IMPORTANT:
 - Output ONLY the JSON object, nothing else
-- Use a VARIETY of card types
-- EVERY card must have a question - no plain statements
-- ALWAYS include source name in questions - never "the paper" or "the book"
+- Use a VARIETY of card types appropriately
+- **MAJORITY of cards should test reasoning ("why/how"), not just facts ("what")**
+- EVERY card must have a question—no plain statements
+- ALWAYS include source name in questions—never "the paper" or "the book"
+- Answers to "why" questions should include the mechanism/reasoning
 - Adapt card count to content complexity
 - PREFER existing decks over creating new ones
+- Match the language of the source material

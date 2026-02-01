@@ -7,6 +7,7 @@ Requires Anki desktop app with Anki-Connect add-on (code: 2055492159).
 
 import argparse
 import json
+import os
 import sys
 import urllib.request
 from pathlib import Path
@@ -242,6 +243,66 @@ def extract_content(file_path: str, config: dict) -> tuple:
         return path.read_text(errors='ignore'), False
     except Exception:
         raise ValueError(f"Cannot read file: {file_path}")
+
+
+# Tag for marking files that have flashcards generated
+ANKI_TAG = 'anki-flashcards'
+
+
+def get_file_tags(file_path: str) -> list:
+    """Get KDE file tags from extended attributes.
+    
+    Args:
+        file_path: Path to file
+        
+    Returns:
+        List of tag strings
+    """
+    try:
+        tags_bytes = os.getxattr(file_path, 'user.xdg.tags')
+        return [t.strip() for t in tags_bytes.decode('utf-8').split(',') if t.strip()]
+    except OSError:
+        return []
+
+
+def set_file_tags(file_path: str, tags: list) -> bool:
+    """Set KDE file tags via extended attributes.
+    
+    Args:
+        file_path: Path to file
+        tags: List of tag strings
+        
+    Returns:
+        True if successful
+    """
+    try:
+        tags_str = ','.join(tags)
+        os.setxattr(file_path, 'user.xdg.tags', tags_str.encode('utf-8'))
+        return True
+    except OSError as e:
+        print(f"  ⚠ Could not set file tags: {e}", file=sys.stderr)
+        return False
+
+
+def has_flashcards_tag(file_path: str) -> bool:
+    """Check if file has the anki-flashcards tag."""
+    return ANKI_TAG in get_file_tags(file_path)
+
+
+def mark_file_as_processed(file_path: str) -> bool:
+    """Add the anki-flashcards tag to a file.
+    
+    Args:
+        file_path: Path to file
+        
+    Returns:
+        True if tag was added successfully
+    """
+    tags = get_file_tags(file_path)
+    if ANKI_TAG not in tags:
+        tags.append(ANKI_TAG)
+        return set_file_tags(file_path, tags)
+    return True  # Already tagged
 
 
 def _fix_math_in_text(text: str) -> str:
@@ -481,6 +542,11 @@ def process_file(file_path: str, config: dict) -> dict:
     print(f"  ✓ Added {added} cards", file=sys.stderr)
     if skipped > 0:
         print(f"  ⚠ Skipped {skipped} duplicates", file=sys.stderr)
+    
+    # Tag file as processed (for Dolphin visual indicator)
+    if added > 0:
+        if mark_file_as_processed(file_path):
+            print(f"  ✓ Tagged file (visible in Dolphin tags column)", file=sys.stderr)
     
     return {
         'file': file_path,
