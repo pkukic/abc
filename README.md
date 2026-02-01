@@ -27,6 +27,7 @@ The name stands for **A**uto **B**uild **C**ards. It's also a pun—[ABC sir](ht
 | **Solve MCQ Exam** | Solve multiple-choice exams with detailed reasoning (batch support) |
 | **Fix Xournal** | Rebind .xoj/.xopp to new PDF background and export _notes.pdf |
 | **Folder Colors** | Set folder colors in Dolphin |
+| **Generate Anki Flashcards** | Create flashcards from any file and add to Anki via Anki-Connect |
 
 **Refresh feature:** All LLM-powered tools preserve originals (`.bak` files for code, separate outputs for others). Re-run anytime to regenerate with newer models.
 
@@ -73,6 +74,7 @@ abc/
 │   ├── epub_to_pdf.sh
 │   ├── fix_xournal.sh
 │   ├── folder_colors.sh
+│   ├── generate_flashcards.sh
 │   ├── merge_exam.sh
 │   ├── retype_pdf.sh
 │   ├── shared_libs.sh
@@ -85,12 +87,14 @@ abc/
 │   │   ├── ebook-to-pdf.desktop
 │   │   ├── fix-xournal.desktop
 │   │   ├── folder-colors.desktop
+│   │   ├── generate-flashcards.desktop
 │   │   ├── merge-exam.desktop
 │   │   ├── retype-pdf.desktop
 │   │   ├── solve-mcq.desktop
 │   │   ├── studify-cp.desktop
 │   │   └── transcribe-audio.desktop
 │   ├── prompts/            # LLM prompt templates
+│   │   ├── generate_flashcards.txt
 │   │   ├── merge_exam.txt
 │   │   ├── merge_exam_images.txt
 │   │   ├── merge_exam_mixed.txt
@@ -109,6 +113,7 @@ abc/
 │       │   ├── common.sh
 │       │   └── __init__.py
 │       ├── annotate_code.py
+│       ├── generate_flashcards.py
 │       ├── merge_exam.py
 │       ├── retype_pdf.py
 │       ├── solve_mcq.py
@@ -130,6 +135,7 @@ Automatically installed/checked:
 - **uv** - Python package manager
 - **insanely-fast-whisper** - Transcription with diarization
 - **google-genai** - Gemini API client
+- **Anki + Anki-Connect** - Required for flashcard generation (add-on code: 2055492159)
 
 Optional for GPU acceleration:
 - **cuDNN 9** - CUDA deep neural network library

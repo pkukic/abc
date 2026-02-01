@@ -108,6 +108,7 @@ source "$SCRIPT_DIR/converters/merge_exam.sh"
 source "$SCRIPT_DIR/converters/solve_mcq.sh"
 source "$SCRIPT_DIR/converters/compile_latex.sh"
 source "$SCRIPT_DIR/converters/notebook_to_py.sh"
+source "$SCRIPT_DIR/converters/generate_flashcards.sh"
 
 echo ""
 

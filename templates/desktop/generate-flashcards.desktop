@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=KonqPopupMenu/Plugin
+MimeType=all/all;
+Actions=generateFlashcards;
+X-KDE-Priority=TopLevel
+
+[Desktop Action generateFlashcards]
+Name=Generate Anki Flashcards (LLM)
+Icon=accessories-dictionary
+Exec=gnome-terminal -- bash -c '$HOME/.local/bin/generate-flashcards.sh "$@"; echo ""; read -p "Press Enter to close..."' _ %F
